@@ -11,7 +11,7 @@
 a {
   color: var(--color-text);
   text-decoration: none;
-  transition: color 0.5s;
+  transition: color 0.2s;
 }
 
 .hover-hand:hover {
@@ -20,7 +20,7 @@ a {
 
 input:focus, input:active {
   outline: none;
-}
+} 
 
 *.enable-select {
   -webkit-user-select: text;
@@ -39,6 +39,5 @@ input:focus, input:active {
 @media (hover: hover) {
   a:hover {
     color: var(--color-hover);
-    transition: color 0.5s;
   }
 }

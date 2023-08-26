@@ -1,8 +1,7 @@
 <template>
     <div id="command-search-results">
         <span v-if="props.searchResults.length > 0">
-            <router-link
-                :to="{ path: `${result.id}-${result.name}-${result.commandTypes.name}-command-help` }"
+            <router-link :to="{ path: `${result.id}-${result.name}-${result.commandTypes.name}-command-help` }"
                 class="result hover-hand" v-for="result in props.searchResults" :key="result.id"
                 v-on:click="getCommandDetails(result.id)">
                 <span class="command-main">{{ result.name }} ({{ result.commandTypes.name }}) </span><span

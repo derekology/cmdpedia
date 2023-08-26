@@ -131,20 +131,26 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
     align-items: start;
+
 }
 
 #main-info {
     margin-left: 1em;
 }
 
+#command-type {
+    transition: all 0.5s;
+}
 
 #command-name {
     font-size: 2.5em;
     font-weight: bold;
+    transition: all 0.5s;
 }
 
 #command-description {
     margin-top: -10px;
+    transition: all 0.5s;
 }
 
 #command-meta {
@@ -157,21 +163,21 @@ onMounted(() => {
     min-height: 300px;
     border: 1px solid var(--color-background-mute);
     border-radius: 10px;
+    transition: all 0.5s;
 }
 
 #command-meta-copy {
     float: right;
-    background: var(--color-background);
     text-align: right;
     width: 24px;
     height: 24px;
     border: 1px solid rgba(0, 0, 0, 0);
     margin: 3px -3px;
-    transition: all 0.2s;
+    border-radius: 3px;
+    transition: border 0.2s;
 }
 
 #command-meta-copy:hover {
     border: 1px solid var(--color-text);
-    border-radius: 3px;
 }
 </style>

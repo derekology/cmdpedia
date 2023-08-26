@@ -9,7 +9,7 @@
     color: var(--color-heading);
     font-size: 2em;
     margin: 20px 20px 30px 20px;
-    transition: color 0.5s;
+    transition: color 0.2s;
 }
 
 #logo:hover {

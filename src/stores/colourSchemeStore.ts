@@ -1,0 +1,60 @@
+import { ref } from 'vue';
+import { defineStore } from 'pinia';
+
+import type { Ref } from 'vue';
+
+export const colourSchemeStore = defineStore(
+    'colourSchemeStore', () => {
+        const darkMode = ref(false) as Ref<boolean>;
+
+        function setDarkMode(darkModeenabled: boolean): void {
+            darkMode.value = darkModeenabled;
+            updateColourScheme();
+        };
+
+        function toggleDarkMode(): void {
+            darkMode.value = !darkMode.value;
+            updateColourScheme();
+        };
+
+        function determineInitialColourScheme(): void {
+            window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setDarkMode(true) : setDarkMode(false);
+        };
+
+        function updateColourScheme(): void {
+            const root: HTMLElement | null = document.querySelector(':root');
+
+            if (darkMode.value) {
+                if (root && root.style) {
+                    root.style.setProperty('--color-background', 'var(--vt-c-black)')
+                    root.style.setProperty('--color-background-mute', 'var(--vt-c-black-mute)')
+                    root.style.setProperty('--color-background-soft', 'var(--vt-c-black-soft)')
+
+                    root.style.setProperty('--color-border', 'var(--vt-c-divider-dark-2)')
+                    root.style.setProperty('--color-border-hover', 'var(--vt-c-divider-dark-1)')
+                    root.style.setProperty('--color-border-hover-90', 'var(--vt-c-divider-dark-3)')
+
+                    root.style.setProperty('--color-heading', 'var(--vt-c-text-dark-1)')
+                    root.style.setProperty('--color-text', 'var(--vt-c-text-dark-2)')
+                    root.style.setProperty('--color-hover', 'var(--vt-c-text-dark-3)')
+                }
+            } else {
+                if (root && root.style) {
+                    root.style.setProperty('--color-background', 'var(--vt-c-white)')
+                    root.style.setProperty('--color-background-mute', 'var(--vt-c-white-soft)')
+                    root.style.setProperty('--color-background-soft', 'var(--vt-c-white-mute)')
+
+                    root.style.setProperty('--color-border', 'var(--vt-c-divider-light-2)')
+                    root.style.setProperty('--color-border-hover', 'var(--vt-c-divider-light-1)')
+                    root.style.setProperty('--color-border-hover-90', 'var(--vt-c-divider-light-3)')
+
+                    root.style.setProperty('--color-heading', 'var(--vt-c-text-light-1)')
+                    root.style.setProperty('--color-text', 'var(--vt-c-text-light-1)')
+                    root.style.setProperty('--color-hover', 'var(--vt-c-text-light-2)')
+                }
+            }
+        };
+
+        return { darkMode, determineInitialColourScheme, setDarkMode, toggleDarkMode };
+    }
+);
