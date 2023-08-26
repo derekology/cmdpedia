@@ -63,6 +63,7 @@ onMounted((): void => {
     background: var(--color-background);
     border: 1px solid var(--color-background-mute);
     transition: background-color 0.5s;
+    transition: border 0.5s;
 }
 
 #command-search-box-search-term {
