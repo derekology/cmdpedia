@@ -39,12 +39,27 @@ main {
     align-items: center;
 }
 
-#search {
-    width: 800px;
-}
-
 #details {
     width: 800px;
     margin-top: 2.25em;
+}
+
+@media (max-width: 825px) {
+    #details {
+        width: 600px;
+    }
+}
+
+@media (max-width: 625px) {
+    #details {
+        width: 400px;
+    }
+}
+
+
+@media (max-width: 425px) {
+    #details {
+        width: 300px;
+    }
 }
 </style>

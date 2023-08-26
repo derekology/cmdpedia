@@ -65,7 +65,25 @@ onMounted((): void => {
     justify-content: space-between;
     background: var(--color-background);
     border: 1px solid var(--color-background-mute);
-    transition: all 0.5s;
+    transition: all 0.5s, width 0s;
+}
+
+@media (max-width: 825px) {
+    #command-search-box {
+        width: 600px;
+    }
+}
+
+@media (max-width: 625px) {
+    #command-search-box {
+        width: 400px;
+    }
+}
+
+@media (max-width: 425px) {
+    #command-search-box {
+        width: 300px;
+    }
 }
 
 #command-search-box-search-term {
@@ -76,6 +94,16 @@ onMounted((): void => {
     background: none;
     border: none;
     width: 100%;
+}
+
+@media (max-width: 425px) {
+    #command-search-box-search-term {
+        font-size: 16px;
+    }
+
+    #command-search-box-search-type {
+        font-size: 12px;
+    }
 }
 
 #command-search-box-search-type {

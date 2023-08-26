@@ -137,7 +137,25 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
     align-items: start;
+}
 
+@media (max-width: 825px) {
+    #command-details {
+        width: 600px;
+    }
+}
+
+@media (max-width: 625px) {
+    #command-details {
+        width: 400px;
+    }
+}
+
+
+@media (max-width: 425px) {
+    #command-details {
+        width: 300px;
+    }
 }
 
 #main-info {

@@ -54,6 +54,25 @@ function getCommandDetails(id: number): void {
     scrollbar-width: none;
 }
 
+@media (max-width: 825px) {
+    #command-search-results {
+        width: 600px;
+    }
+}
+
+@media (max-width: 625px) {
+    #command-search-results {
+        width: 400px;
+    }
+}
+
+
+@media (max-width: 425px) {
+    #command-search-results {
+        width: 300px;
+    }
+}
+
 #command-search-results::-webkit-scrollbar {
     display: none;
 }
@@ -69,7 +88,8 @@ function getCommandDetails(id: number): void {
 
 .result {
     display: block;
-    padding: 10px 64px;
+    line-height: 1em;
+    padding: 20px 40px;
 }
 
 .result:hover {

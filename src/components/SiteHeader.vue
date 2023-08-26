@@ -42,13 +42,33 @@ function toggleColourScheme() {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 800px;
+    margin-bottom: 3%;
+}
+
+@media (max-width: 825px) {
+    #site-header {
+        width: 600px;
+    }
+}
+
+@media (max-width: 625px) {
+    #site-header {
+        width: 400px;
+    }
+}
+
+
+@media (max-width: 425px) {
+    #site-header {
+        width: 300px;
+    }
 }
 
 nav {
     display: flex;
     justify-content: right;
-    width: 200px;
-    margin-right: 0.25em;
+    margin-top: 4px;
 }
 
 nav>* {

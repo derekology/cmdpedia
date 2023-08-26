@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    <p>This is a passion project created to save me time and clicks when I forget the syntax to a
+    <p>> cmdpedia is a passion project created to save me time and clicks when I forget the syntax to a
       specific command. Thanks for visiting.</p>
     <div id="social-buttons">
       <a href="https://github.com/derekology/" target="_blank">

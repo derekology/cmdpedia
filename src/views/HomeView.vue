@@ -21,8 +21,4 @@ main {
   flex-direction: column;
   align-items: center;
 }
-
-#search {
-  width: 800px;
-}
 </style>
