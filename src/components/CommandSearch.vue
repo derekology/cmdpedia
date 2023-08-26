@@ -16,7 +16,7 @@ import CommandSearchDisplayResults from '@/components/modules/CommandSearchDispl
 import type { Ref, ComputedRef } from 'vue';
 import type { ISingleCommand } from '@/interfaces/ISingleCommand';
 
-const showSearchResults = ref(false) as Ref<boolean>;
+const showSearchResults: Ref<boolean> = ref(false);
 const searchResults: ComputedRef<ISingleCommand[]> = computed(() => { return useSearchStore().searchResults; });
 const target: Ref<null> = ref(null);
 

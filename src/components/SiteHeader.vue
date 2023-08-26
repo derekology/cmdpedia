@@ -25,9 +25,14 @@ import { colourSchemeStore } from '@/stores/colourSchemeStore';
 import IconDarkMode from '@/components/partials/IconDarkMode.vue';
 import IconLightMode from '@/components/partials/IconLightMode.vue';
 
-const currentColourScheme = ref(computed(() => { return colourSchemeStore().darkMode }));
+import type { ComputedRef } from 'vue';
+
+const currentColourScheme: ComputedRef<boolean> = ref(computed(() => { return colourSchemeStore().darkMode }));
 
 function toggleColourScheme() {
+    /**
+     * Toggle the colour scheme between light and dark mode
+     */
     colourSchemeStore().toggleDarkMode();
 }
 </script>
@@ -47,7 +52,7 @@ nav {
 }
 
 nav>* {
-    padding: 0px 10px;
+    margin: 0px 10px;
 }
 
 .colour-scheme-icon svg {

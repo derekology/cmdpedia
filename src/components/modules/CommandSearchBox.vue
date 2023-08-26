@@ -23,11 +23,14 @@ import IconSearch from '@/components/partials/IconSearch.vue';
 import type { Ref } from 'vue';
 import type { PostgrestSingleResponse } from '@supabase/supabase-js';
 
-const searchTerm = ref(useSearchStore().searchTerm) as Ref<string>;
-const searchType = ref(useSearchStore().searchType) as Ref<number>;
-const commandTypes = ref([]) as Ref<{ id: any, name: any }[]>;
+const searchTerm: Ref<string> = ref(useSearchStore().searchTerm);
+const searchType: Ref<number> = ref(useSearchStore().searchType);
+const commandTypes: Ref<{ id: any, name: any }[]> = ref([]);
 
 async function getCommandTypes(): Promise<void> {
+    /**
+     * Get the command types from the database
+     */
     const { data }: PostgrestSingleResponse<{ id: any; name: any; }[]> = await supabaseClient.from('commandTypes').select(`
         id, 
         name

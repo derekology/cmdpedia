@@ -29,6 +29,11 @@ const props = defineProps({
 });
 
 function getCommandDetails(id: number): void {
+    /**
+     * Get the details of the selected command
+     * 
+     * @param {number} id The ID of the selected command
+     */
     useSearchStore().setSelectedId(id);
 }
 </script>

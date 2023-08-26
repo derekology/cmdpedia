@@ -58,6 +58,9 @@ const selectedCommandOptions: Ref<ISingleCommandOptions[]> = ref([]);
 const selectedCommandParams: Ref<ISingleCommandParams[]> = ref([]);
 
 async function getSelectedCommandInfo(): Promise<void> {
+    /**
+     * Get the selected command's information from the database
+     */
     const { data }: PostgrestSingleResponse<ISingleCommand> = await supabaseClient.from('commandNames').select(`
         id, 
         name,
@@ -100,8 +103,11 @@ async function getSelectedCommandInfo(): Promise<void> {
 };
 
 async function copySyntaxToClipboard(): Promise<void> {
-    const children = document.querySelector('#command-syntax')?.children
-    const contentToCopy = children ? Array.from(children, ({ textContent }) => textContent?.trim()).filter(Boolean).join(' ') : null;
+    /**
+     * Copy the command syntax to the user's clipboard
+     */
+    const children: HTMLCollection | undefined = document.querySelector('#command-syntax')?.children
+    const contentToCopy: string | null = children ? Array.from(children, ({ textContent }) => textContent?.trim()).join(' ') : null;
 
     if (contentToCopy === null) {
         alert('Unable to copy. Please try again.');

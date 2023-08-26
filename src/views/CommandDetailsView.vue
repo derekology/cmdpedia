@@ -20,6 +20,9 @@ import type { ComputedRef } from 'vue';
 const commandSelected: ComputedRef<number | null> = computed((): number | null => { return useSearchStore().selectedId; });
 
 function getCommandIdFromUrl(): void {
+    /**
+     * Get the command id from the url and set it in the store
+     */
     const url: string = window.location.pathname.replace("/", "");
     const urlParts: string[] = url.split('-');
     const id: number = parseInt(urlParts[0].split('-').pop() as string);

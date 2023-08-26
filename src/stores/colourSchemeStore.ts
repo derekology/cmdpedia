@@ -5,23 +5,35 @@ import type { Ref } from 'vue';
 
 export const colourSchemeStore = defineStore(
     'colourSchemeStore', () => {
-        const darkMode = ref(false) as Ref<boolean>;
+        const darkMode: Ref<boolean> = ref(false);
 
         function setDarkMode(darkModeenabled: boolean): void {
+            /**
+             * Set dark mode value to new dark mode value then update colour scheme
+             */
             darkMode.value = darkModeenabled;
             updateColourScheme();
         };
 
         function toggleDarkMode(): void {
+            /**
+             * Toggle dark mode value then update colour scheme
+             */
             darkMode.value = !darkMode.value;
             updateColourScheme();
         };
 
         function determineInitialColourScheme(): void {
+            /**
+             * Determine initial colour scheme based on user's system preferences
+             */
             window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? setDarkMode(true) : setDarkMode(false);
         };
 
         function updateColourScheme(): void {
+            /**
+             * Update colour scheme based on dark mode value
+             */
             const root: HTMLElement | null = document.querySelector(':root');
 
             if (darkMode.value) {
