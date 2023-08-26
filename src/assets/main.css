@@ -1,0 +1,44 @@
+@import '@/assets/base.css';
+
+#app {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+
+  font-weight: normal;
+}
+
+a {
+  color: var(--color-text);
+  text-decoration: none;
+  transition: color 0.5s;
+}
+
+.hover-hand:hover {
+  cursor: pointer;
+}
+
+input:focus, input:active {
+  outline: none;
+}
+
+*.enable-select {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+*:not(.enable-select) {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+@media (hover: hover) {
+  a:hover {
+    color: var(--color-hover);
+    transition: color 0.5s;
+  }
+}

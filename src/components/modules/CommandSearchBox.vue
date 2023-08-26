@@ -1,0 +1,103 @@
+<template>
+    <div id="command-search-box">
+        <IconSearch />
+        <input id="command-search-box-search-term" type="text" placeholder="Search for a command" autocomplete="off"
+            v-model="searchTerm" />
+        <select id="command-search-box-search-type" class="hover-hand" name="command-type" title="command-type"
+            v-model="searchType">
+            <option :value="0">
+                all
+            </option>
+            <option v-for="commandType in commandTypes" :key="commandType.id" :value="commandType.id">{{
+                commandType.name }}</option>
+        </select>
+    </div>
+</template>
+
+<script setup lang="ts">
+import { ref, watch, onMounted } from 'vue';
+import { useSearchStore } from '@/stores/searchStore';
+import { supabaseClient } from '@/constants/supabaseConfig.js';
+import IconSearch from '@/components/partials/IconSearch.vue';
+
+import type { Ref } from 'vue';
+import type { PostgrestSingleResponse } from '@supabase/supabase-js';
+
+const searchTerm = ref(useSearchStore().searchTerm) as Ref<string>;
+const searchType = ref(useSearchStore().searchType) as Ref<number>;
+const commandTypes = ref([]) as Ref<{ id: any, name: any }[]>;
+
+async function getCommandTypes(): Promise<void> {
+    const { data }: PostgrestSingleResponse<{ id: any; name: any; }[]> = await supabaseClient.from('commandTypes').select(`
+        id, 
+        name
+    `);
+
+    if (data) {
+        commandTypes.value = data;
+    };
+};
+
+watch(searchTerm, (newSearchTerm: string): void => {
+    useSearchStore().setSearchTerm(newSearchTerm);
+});
+
+watch(searchType, (newSearchType: number): void => {
+    useSearchStore().setSearchType(newSearchType);
+});
+
+onMounted((): void => {
+    getCommandTypes();
+});
+</script>
+
+<style scoped>
+#command-search-box {
+    position: relative;
+    display: flex;
+    z-index: 999;
+    width: 800px;
+    padding: 10px 25px;
+    border-radius: 30px;
+    justify-content: space-between;
+    background: var(--color-background);
+    border: 1px solid var(--color-background-mute);
+}
+
+#command-search-box-search-term {
+    font-family: 'Inconsolata', 'Consolas', 'Courier New', monospace;
+    font-size: 20px;
+    line-height: 2.25rem;
+    color: var(--color-heading);
+    background: none;
+    border: none;
+    width: 100%;
+}
+
+#command-search-box-search-type {
+    font-family: 'Inconsolata', 'Consolas', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 2.25rem;
+    color: var(--color-text);
+    text-align: right;
+    background: none;
+    border: none;
+}
+
+select>option {
+    background-color: var(--color-background-soft);
+}
+
+select {
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    background: transparent !important;
+    background-image: url("data:image/svg+xml;utf8,<svg height='6' fill='grey' viewBox='0 0 24 24' width='8' xmlns='http://www.w3.org/2000/svg'><path d='M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z'/></svg>") !important;
+    background-repeat: no-repeat !important;
+    background-position-x: 100% !important;
+    background-position-y: 16px !important;
+    padding-right: 0.8rem !important;
+}
+</style>
