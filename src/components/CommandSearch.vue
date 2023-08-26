@@ -22,3 +22,9 @@ const target: Ref<null> = ref(null);
 
 onClickOutside(target, () => showSearchResults.value = false);
 </script>
+
+<style scoped>
+#command-search {
+    position: relative;
+}
+</style>

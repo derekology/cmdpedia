@@ -1,8 +1,6 @@
 <template>
     <main>
-        <div id="search">
-            <CommandSearch />
-        </div>
+        <CommandSearch />
         <div id="details" v-if="commandSelected">
             <CommandDetails />
         </div>
@@ -33,33 +31,7 @@ getCommandIdFromUrl();
 </script>
   
 <style scoped>
-main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
 #details {
-    width: 800px;
     margin-top: 2.25em;
-}
-
-@media (max-width: 825px) {
-    #details {
-        width: 600px;
-    }
-}
-
-@media (max-width: 625px) {
-    #details {
-        width: 400px;
-    }
-}
-
-
-@media (max-width: 425px) {
-    #details {
-        width: 300px;
-    }
 }
 </style>

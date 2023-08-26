@@ -59,31 +59,12 @@ onMounted((): void => {
     position: relative;
     display: flex;
     z-index: 999;
-    width: 800px;
     padding: 10px 25px;
     border-radius: 30px;
     justify-content: space-between;
     background: var(--color-background);
     border: 1px solid var(--color-background-mute);
     transition: all 0.5s, width 0s;
-}
-
-@media (max-width: 825px) {
-    #command-search-box {
-        width: 600px;
-    }
-}
-
-@media (max-width: 625px) {
-    #command-search-box {
-        width: 400px;
-    }
-}
-
-@media (max-width: 425px) {
-    #command-search-box {
-        width: 300px;
-    }
 }
 
 #command-search-box-search-term {

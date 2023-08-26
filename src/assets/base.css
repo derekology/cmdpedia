@@ -68,7 +68,6 @@
 }
 
 body {
-  min-height: 100vh;
   color: var(--color-text);
   background: var(--color-background-soft);
   transition: background-color 0.5s;

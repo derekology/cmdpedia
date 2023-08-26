@@ -4,10 +4,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
   max-width: 800px;
   margin: 0 auto;
   padding: 2rem;
   font-weight: normal;
+}
+
+main {
+  width: 100%;
 }
 
 a {
@@ -38,8 +43,6 @@ input:focus, input:active {
   user-select: none;
 }
 
-@media (hover: hover) {
-  a:hover {
-    color: var(--color-hover);
-  }
+a:hover {
+  color: var(--color-hover);
 }

@@ -27,7 +27,7 @@
 
 @media (max-width: 425px) {
     #logo {
-        font-size: 1.25em;
+        font-size: 1.2em;
     }
 }
 

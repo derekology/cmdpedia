@@ -1,7 +1,5 @@
 <template>
-  <header>
-    <SiteHeader />
-  </header>
+  <SiteHeader />
   <RouterView />
 </template>
 

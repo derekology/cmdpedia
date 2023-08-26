@@ -41,8 +41,10 @@ function getCommandDetails(id: number): void {
 <style scoped>
 #command-search-results {
     position: absolute;
-    width: 800px;
-    margin-top: -30px;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin-top: 25px;
     padding: 35px 0px 0px 0px;
     border-radius: 0px 0px 25px 25px;
     background-color: var(--color-background);
@@ -52,25 +54,6 @@ function getCommandDetails(id: number): void {
     overflow-y: scroll;
     -ms-overflow-style: none;
     scrollbar-width: none;
-}
-
-@media (max-width: 825px) {
-    #command-search-results {
-        width: 600px;
-    }
-}
-
-@media (max-width: 625px) {
-    #command-search-results {
-        width: 400px;
-    }
-}
-
-
-@media (max-width: 425px) {
-    #command-search-results {
-        width: 300px;
-    }
 }
 
 #command-search-results::-webkit-scrollbar {

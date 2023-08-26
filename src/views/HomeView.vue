@@ -1,8 +1,6 @@
 <template>
   <main>
-    <div id="search">
-      <CommandSearch />
-    </div>
+    <CommandSearch />
   </main>
 </template>
 
@@ -14,11 +12,3 @@ useHead({
   title: `> cmdpedia`
 });
 </script>
-
-<style scoped>
-main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-</style>

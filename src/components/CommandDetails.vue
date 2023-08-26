@@ -139,27 +139,8 @@ onMounted(() => {
     align-items: start;
 }
 
-@media (max-width: 825px) {
-    #command-details {
-        width: 600px;
-    }
-}
-
-@media (max-width: 625px) {
-    #command-details {
-        width: 400px;
-    }
-}
-
-
-@media (max-width: 425px) {
-    #command-details {
-        width: 300px;
-    }
-}
-
 #main-info {
-    margin-left: 1em;
+    margin: 0 0.5em;
 }
 
 #command-type {
@@ -173,12 +154,12 @@ onMounted(() => {
 }
 
 #command-description {
-    margin-top: -10px;
+    line-height: 1em;
     transition: all 0.5s;
 }
 
 #command-meta {
-    margin-top: 0.5em;
+    margin-top: 1em;
     font-size: 16px;
     line-height: 1.7em;
     background: var(--color-background);
