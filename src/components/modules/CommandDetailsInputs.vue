@@ -2,7 +2,7 @@
     <div id="header">
         <span id="heading">
             <span id="title">inputs&nbsp;</span>
-            <span id="desc">hover over an option for more info</span>
+            <span id="desc">hover over an input for more info</span>
         </span>
         <div id="part-select">
             <select id="part-select-dropdown" class="hover-hand" title="argument-type-select" v-model="selectedSection">
