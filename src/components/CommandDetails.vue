@@ -67,17 +67,20 @@ async function getSelectedCommandInfo(): Promise<void> {
             id,
             flag,
             placeholder,
-            description
+            description,
+            required
         ),
         commandOptions (
             id,
             flag,
-            description
+            description,
+            required
         ),
         commandParams (
             id,
             placeholder,
-            description
+            description,
+            required
         )
     `).filter(
         'id',
@@ -108,7 +111,18 @@ function resetSelectedInputs(): void {
     selectedCommandSelectedParams.value = [];
     selectedCommandSelectedOptions.value = [];
     selectedCommandSelectedArgs.value = [];
+
+    addRequiredInputs();
 };
+
+function addRequiredInputs(): void {
+    /**
+     * Add all required inputs to the selected inputs
+     */
+    selectedCommandSelectedParams.value = selectedCommandParams.value.filter((param: ISingleCommandParams) => param.required);
+    selectedCommandSelectedOptions.value = selectedCommandOptions.value.filter((option: ISingleCommandOptions) => option.required);
+    selectedCommandSelectedArgs.value = selectedCommandArgs.value.filter((arg: ISingleCommandArgs) => arg.required);
+}
 
 function addToOrRemoveFromSelectedList(inputToModify: IInputToModify): void {
     /**
@@ -118,6 +132,11 @@ function addToOrRemoveFromSelectedList(inputToModify: IInputToModify): void {
      */
     let selectedList: Ref<any[]>;
     const targetItem: ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams = inputToModify.item;
+
+    if (targetItem.required) {
+        alert('This input is required.');
+        return
+    }
 
     switch (inputToModify.list) {
         case 'arg':

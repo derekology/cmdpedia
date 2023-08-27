@@ -2,7 +2,7 @@
     <div id="header">
         <span id="heading">
             <span id="title">inputs&nbsp;</span>
-            <span id="desc">(hover over an option for more info)</span>
+            <span id="desc">hover over an option for more info</span>
         </span>
         <div id="part-select">
             <select id="part-select-dropdown" class="hover-hand" title="argument-type-select" v-model="selectedSection">
@@ -19,21 +19,27 @@
                 v-for="option in props.selectedCommandOptions"
                 v-on:click="emitInputToModify({ list: 'option', item: option })" :key="option.flag"
                 :title="option.description">
-                {{ option.flag }} </span>
+                {{ `${option.flag}${option.required ? '*' : ''}` }}
+            </span>
         </div>
         <div id="args" class="input-container" v-if="selectedSection == 1">
             <span class="hover-hand command-part command-arg" v-for="arg in props.selectedCommandArgs" :key="arg.flag"
                 :class="{ active: selectedCommandSelectedArgs.includes(arg) }"
                 v-on:click="emitInputToModify({ list: 'arg', item: arg })" :title="arg.description">
-                {{ arg.flag }}{{ '=<' + arg.placeholder + '>' }} </span>
+                {{ `${arg.flag}=<${arg.placeholder}>${arg.required ? '*' : ''}` }}
+            </span>
         </div>
         <div id="params" class="input-container" v-if="selectedSection == 2">
             <span class="hover-hand command-part command-param" v-for="param in props.selectedCommandParams"
                 :class="{ active: selectedCommandSelectedParams.includes(param) }"
                 v-on:click="emitInputToModify({ list: 'param', item: param })" :key="param.placeholder"
                 :title="param.description">
-                {{ '<' + param.placeholder + '>' }} </span>
+                {{ `<${param.placeholder}>${param.required ? '*' : ''}` }}
+            </span>
         </div>
+    </div>
+    <div id="footnote">
+        <span>* = required</span>
     </div>
 </template>
 
@@ -112,7 +118,8 @@ function emitInputToModify(inputToModify: IInputToModify): void {
     line-height: 1.2em;
 }
 
-#desc {
+#desc,
+#footnote {
     font-size: 12px;
     color: var(--color-text);
 }
@@ -174,5 +181,10 @@ function emitInputToModify(inputToModify: IInputToModify): void {
 .command-part:hover,
 .active {
     background-color: var(--color-border-hover);
+}
+
+#footnote {
+    margin-top: 0.75em;
+    margin-left: 0.7em;
 }
 </style>

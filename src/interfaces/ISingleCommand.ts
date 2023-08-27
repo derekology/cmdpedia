@@ -3,18 +3,21 @@ export interface ISingleCommandArgs {
     flag: string,
     placeholder: string,
     description: string,
+    required: boolean
 };
 
 export interface ISingleCommandOptions {
     id: number,
     flag: string,
     description: string,
+    required: boolean
 };
 
 export interface ISingleCommandParams {
     id: number,
     placeholder: string,
     description: string,
+    required: boolean
 };
 
 export interface ISingleCommandTypes {
