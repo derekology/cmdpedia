@@ -5,7 +5,7 @@
         </RouterLink>
         <div id="nav">
             <nav>
-                <RouterLink v-if="onAboutPage" :to="lastPage ? lastPage : '/'">back</RouterLink>
+                <RouterLink v-if="onAboutPage" :to="lastPage ? lastPage : '/'">{{ lastPage ? 'back' : 'home' }}</RouterLink>
                 <RouterLink v-else to="/about" v-on:click="captureLastPage()">about</RouterLink>
                 <span class="colour-scheme-icon hover-hand" v-on:click="toggleColourScheme" v-if="currentColourScheme">
                     <IconLightMode />
