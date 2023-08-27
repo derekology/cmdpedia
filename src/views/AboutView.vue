@@ -1,5 +1,5 @@
 <template>
-  <div class="about">
+  <div id="about">
     <p>> cmdpedia is a personal project created to save me time and clicks when I forget the syntax to a
       specific command. Thanks for visiting.</p>
     <div id="social-buttons">
@@ -23,7 +23,7 @@ useHead({
 </script>
 
 <style>
-.about {
+#about {
   display: flex;
   flex-direction: column;
   align-items: start;
