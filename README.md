@@ -9,6 +9,7 @@ Cmdpedia is an work-in-progress encyclopedia of commands that allows users to se
 - Search for commands by name or keyword
 - View available inputs for a selected command
 - Add inputs to customize the command's syntax
+- Edit placeholder values in the syntax
 - Copy the complete command syntax with selected inputs
 
 ## Getting Started
@@ -47,10 +48,10 @@ To set up cmdpedia locally, follow these steps:
 5. Obtain your Supabase URL and API key.
 
 6. Create a .env file in the project root and add your Supabase URL and API key:
-    ```
-    VITE_SUPABASE_URL=your-supabase-url
-    VITE_SUPABASE_KEY=your-supabase-api-key
-    ```
+   ```
+   VITE_SUPABASE_URL=your-supabase-url
+   VITE_SUPABASE_KEY=your-supabase-api-key
+   ```
 
 ### Usage
 
@@ -63,6 +64,7 @@ npm run dev
 This will launch the development server, and you can access the application by visiting http://localhost:5173 in your web browser.
 
 ## Contributing
+
 Contributions are welcome! If you find a bug or have an idea for an enhancement, feel free to open an issue or submit a pull request.
 
 ## Contact
