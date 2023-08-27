@@ -1,7 +1,7 @@
 <template>
     <div id="command-details">
         <div id="main-info">
-            <div id="first-row">
+            <div>
                 <span id="command-name">
                     {{ selectedCommandName ? selectedCommandName : '' }}
                 </span>
@@ -17,13 +17,14 @@
             :selectedCommandSelectedArgs="selectedCommandSelectedArgs"
             :selectedCommandSelectedOptions="selectedCommandSelectedOptions"
             :selectedCommandSelectedParams="selectedCommandSelectedParams"
-            @resetSelectedInputs="() => { resetSelectedInputs() }" />
+            @resetSelectedInputs="(): void => resetSelectedInputs()"
+            @addValueToInput="(inputToEdit, newInputValue): void => { addValueToInput(inputToEdit, newInputValue) }" />
         <CommandDetailsInputs :selectedCommandArgs="selectedCommandArgs" :selectedCommandOptions="selectedCommandOptions"
             :selectedCommandParams="selectedCommandParams" :selectedCommandName="selectedCommandName"
             :selectedCommandSelectedArgs="selectedCommandSelectedArgs"
             :selectedCommandSelectedOptions="selectedCommandSelectedOptions"
             :selectedCommandSelectedParams="selectedCommandSelectedParams"
-            @modifyInput="(inputToModify: IInputToModify) => { addToOrRemoveFromSelectedList(inputToModify) }" />
+            @modifyInput="(inputToModify: IInputToModify): void => { addToOrRemoveFromSelectedList(inputToModify) }" />
     </div>
 </template>
 
@@ -39,7 +40,7 @@ import type { Ref, ComputedRef } from 'vue';
 import type { ISingleCommand, ISingleCommandArgs, ISingleCommandOptions, ISingleCommandParams, IInputToModify } from '@/interfaces/ISingleCommand';
 import type { PostgrestSingleResponse } from '@supabase/supabase-js';
 
-const selectedCommandId: ComputedRef<number | null> = computed(() => { return useSearchStore().selectedId; });
+const selectedCommandId: ComputedRef<number | null> = computed((): null => useSearchStore().selectedId);
 const selectedCommandName: Ref<string> = ref('');
 const selectedCommandType: Ref<string> = ref('');
 const selectedCommandDescription: Ref<string> = ref('');
@@ -50,6 +51,8 @@ const selectedCommandParams: Ref<ISingleCommandParams[]> = ref([]);
 const selectedCommandSelectedArgs: Ref<ISingleCommandArgs[]> = ref([]);
 const selectedCommandSelectedOptions: Ref<ISingleCommandOptions[]> = ref([]);
 const selectedCommandSelectedParams: Ref<ISingleCommandParams[]> = ref([]);
+
+const customizedCommandInputs: Ref<(ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams)[]> = ref([]);
 
 async function getSelectedCommandInfo(): Promise<void> {
     /**
@@ -106,11 +109,15 @@ async function getSelectedCommandInfo(): Promise<void> {
 
 function resetSelectedInputs(): void {
     /**
-     * Clear the selected inputs
+     * Clear the selected inputs and re-add required ones
      */
     selectedCommandSelectedParams.value = [];
     selectedCommandSelectedOptions.value = [];
     selectedCommandSelectedArgs.value = [];
+
+    for (const input of customizedCommandInputs.value) {
+        removeValueFromInput(input);
+    };
 
     addRequiredInputs();
 };
@@ -119,10 +126,10 @@ function addRequiredInputs(): void {
     /**
      * Add all required inputs to the selected inputs
      */
-    selectedCommandSelectedParams.value = selectedCommandParams.value.filter((param: ISingleCommandParams) => param.required);
-    selectedCommandSelectedOptions.value = selectedCommandOptions.value.filter((option: ISingleCommandOptions) => option.required);
-    selectedCommandSelectedArgs.value = selectedCommandArgs.value.filter((arg: ISingleCommandArgs) => arg.required);
-}
+    selectedCommandSelectedParams.value = selectedCommandParams.value.filter((param: ISingleCommandParams): boolean => param.required);
+    selectedCommandSelectedOptions.value = selectedCommandOptions.value.filter((option: ISingleCommandOptions): boolean => option.required);
+    selectedCommandSelectedArgs.value = selectedCommandArgs.value.filter((arg: ISingleCommandArgs): boolean => arg.required);
+};
 
 function addToOrRemoveFromSelectedList(inputToModify: IInputToModify): void {
     /**
@@ -135,8 +142,8 @@ function addToOrRemoveFromSelectedList(inputToModify: IInputToModify): void {
 
     if (targetItem.required) {
         alert('This input is required.');
-        return
-    }
+        return;
+    };
 
     switch (inputToModify.list) {
         case 'arg':
@@ -148,21 +155,48 @@ function addToOrRemoveFromSelectedList(inputToModify: IInputToModify): void {
         case 'param':
             selectedList = selectedCommandSelectedParams as Ref<ISingleCommandParams[]>;
             break;
-    }
+    };
 
     if (selectedList.value.includes(targetItem)) {
-        selectedList.value = selectedList.value.filter((selectedItem: ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams) => selectedItem !== targetItem);
+        selectedList.value = selectedList.value.filter((selectedItem: ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams): boolean => selectedItem !== targetItem);
     } else {
         selectedList.value.push(targetItem);
-    }
+    };
 };
 
+function removeValueFromInput(inputToEdit: ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams) {
+    /**
+     * Remove value attribute from the input then remove it from the customized inputs array
+     * 
+     * @param {ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams | null} inputToEdit - The event emitted from the CommandDetailsParts component
+     */
+    delete inputToEdit.value;
+    customizedCommandInputs.value = customizedCommandInputs.value.filter((input: ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams): boolean => input !== inputToEdit) as (ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams)[];
+};
 
-watch(selectedCommandId, () => {
+function addValueToInput(inputToEdit: Ref<ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams | null>, newInputValue: string): void {
+    /**
+     * Add value attribute to the input then add it from the customized inputs array
+     * 
+     * @param {ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams | null} inputToEdit - The event emitted from the CommandDetailsParts component
+     * @param {string} newInputValue - The value to add to the input
+     */
+    const targetItem = inputToEdit?.value as ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams;
+
+    if (!newInputValue) {
+        removeValueFromInput(targetItem);
+        return;
+    }
+
+    targetItem.value = newInputValue;
+    customizedCommandInputs.value.push(targetItem);
+};
+
+watch(selectedCommandId, (): void => {
     getSelectedCommandInfo();
 });
 
-onMounted(() => {
+onMounted((): void => {
     getSelectedCommandInfo();
 });
 </script>
@@ -179,13 +213,13 @@ onMounted(() => {
     margin: 0 0.5em;
 }
 
-#command-type {
-    transition: all 0.5s;
-}
-
 #command-name {
     font-size: 2.5em;
     font-weight: bold;
+    transition: all 0.5s;
+}
+
+#command-type {
     transition: all 0.5s;
 }
 

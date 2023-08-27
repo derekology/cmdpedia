@@ -2,6 +2,7 @@ export interface ISingleCommandArgs {
     id: number,
     flag: string,
     placeholder: string,
+    value?: string,
     description: string,
     required: boolean
 };
@@ -9,6 +10,7 @@ export interface ISingleCommandArgs {
 export interface ISingleCommandOptions {
     id: number,
     flag: string,
+    value?: string,
     description: string,
     required: boolean
 };
@@ -16,6 +18,7 @@ export interface ISingleCommandOptions {
 export interface ISingleCommandParams {
     id: number,
     placeholder: string,
+    value?: string,
     description: string,
     required: boolean
 };
@@ -39,4 +42,4 @@ export interface ISingleCommand {
 export interface IInputToModify {
     list: 'arg' | 'option' | 'param',
     item: ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams
-}
+};
