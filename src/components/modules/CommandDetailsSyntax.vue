@@ -1,7 +1,12 @@
 <template>
     <div id="command-meta">
-        <span id="command-meta-copy" title="Copy text" class="hover-hand" v-on:click="copySyntaxToClipboard()">
-            <IconCopy />
+        <span id="comment-meta-actions">
+            <span id="command-meta-reset" title="Reset syntax" class="hover-hand" v-on:click="emitResetSelectedInputs()">
+                <IconReset />
+            </span>
+            <span id="command-meta-copy" title="Copy syntax" class="hover-hand" v-on:click="copySyntaxToClipboard()">
+                <IconCopy />
+            </span>
         </span>
         <span id="command-syntax">
             <span class="enable-select command-syntax command-name">
@@ -25,9 +30,12 @@
 
 <script setup lang="ts">
 import IconCopy from '@/components/partials/IconCopy.vue';
+import IconReset from '@/components/partials/IconReset.vue';
 
 import type { PropType } from 'vue';
 import type { ISingleCommandArgs, ISingleCommandOptions, ISingleCommandParams } from '@/interfaces/ISingleCommand';
+
+const emit = defineEmits(['resetSelectedInputs'])
 
 const props = defineProps({
     selectedCommandName: {
@@ -68,6 +76,13 @@ async function copySyntaxToClipboard(): Promise<void> {
     }
 };
 
+function emitResetSelectedInputs(): void {
+    /**
+     * Emit the item to change to the parent component
+     */
+    emit('resetSelectedInputs');
+}
+
 </script>
 
 <style scoped>
@@ -84,7 +99,12 @@ async function copySyntaxToClipboard(): Promise<void> {
     transition: all 0.5s;
 }
 
-#command-meta-copy {
+#comment-meta-actions>span:first-of-type {
+    margin-left: 12px;
+}
+
+#command-meta-copy,
+#command-meta-reset {
     float: right;
     text-align: right;
     width: 24px;
@@ -95,7 +115,8 @@ async function copySyntaxToClipboard(): Promise<void> {
     transition: border 0.2s;
 }
 
-#command-meta-copy:hover {
+#command-meta-copy:hover,
+#command-meta-reset:hover {
     border: 1px solid var(--color-text);
 }
 </style>

@@ -81,6 +81,8 @@ const props = defineProps({
 function emitInputToModify(inputToModify: IInputToModify): void {
     /**
      * Emit the item to change to the parent component
+     * 
+     * @param {IInputToModify} inputToModify - The item to change
      */
     emit('modifyInput', inputToModify);
 }

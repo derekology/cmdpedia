@@ -16,7 +16,8 @@
         <CommandDetailsSyntax :selectedCommandName="selectedCommandName"
             :selectedCommandSelectedArgs="selectedCommandSelectedArgs"
             :selectedCommandSelectedOptions="selectedCommandSelectedOptions"
-            :selectedCommandSelectedParams="selectedCommandSelectedParams" />
+            :selectedCommandSelectedParams="selectedCommandSelectedParams"
+            @resetSelectedInputs="() => { resetSelectedInputs() }" />
         <CommandDetailsInputs :selectedCommandArgs="selectedCommandArgs" :selectedCommandOptions="selectedCommandOptions"
             :selectedCommandParams="selectedCommandParams" :selectedCommandName="selectedCommandName"
             :selectedCommandSelectedArgs="selectedCommandSelectedArgs"
@@ -92,14 +93,21 @@ async function getSelectedCommandInfo(): Promise<void> {
         selectedCommandOptions.value = data.commandOptions;
         selectedCommandParams.value = data.commandParams;
 
-        selectedCommandSelectedParams.value = [];
-        selectedCommandSelectedOptions.value = [];
-        selectedCommandSelectedArgs.value = [];
+        resetSelectedInputs();
 
         useHead({
             title: `${selectedCommandName.value} ${selectedCommandType.value} command help > cmdpedia`
         });
     };
+};
+
+function resetSelectedInputs(): void {
+    /**
+     * Clear the selected inputs
+     */
+    selectedCommandSelectedParams.value = [];
+    selectedCommandSelectedOptions.value = [];
+    selectedCommandSelectedArgs.value = [];
 };
 
 function addToOrRemoveFromSelectedList(inputToModify: IInputToModify): void {
