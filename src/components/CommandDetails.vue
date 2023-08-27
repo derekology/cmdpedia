@@ -13,28 +13,16 @@
                 {{ selectedCommandDescription ? selectedCommandDescription : '' }}
             </div>
         </div>
-        <div id="command-meta">
-            <span id="command-meta-copy" title="Copy text" class="hover-hand" v-on:click="copySyntaxToClipboard()">
-                <IconCopy />
-            </span>
-            <span id="command-syntax">
-                <span class="enable-select command-syntax command-name">
-                    {{ selectedCommandName + ' ' }}
-                </span>
-                <span class="enable-select command-syntax command-option" v-for="option in selectedCommandOptions"
-                    :key="option.flag" :title="option.description">
-                    {{ option.flag + ' ' }}
-                </span>
-                <span class="enable-select command-syntax command-arg" v-for="arg in selectedCommandArgs" :key="arg.flag"
-                    :title="arg.description">
-                    {{ arg.flag }}=&lt;{{ arg.placeholder }}>
-                </span>
-                <span class="enable-select command-syntax command-param" v-for="param in selectedCommandParams"
-                    :key="param.placeholder" :title="param.description">
-                    &lt;{{ param.placeholder }}>
-                </span>
-            </span>
-        </div>
+        <CommandDetailsSyntax :selectedCommandName="selectedCommandName"
+            :selectedCommandSelectedArgs="selectedCommandSelectedArgs"
+            :selectedCommandSelectedOptions="selectedCommandSelectedOptions"
+            :selectedCommandSelectedParams="selectedCommandSelectedParams" />
+        <CommandDetailsInputs :selectedCommandArgs="selectedCommandArgs" :selectedCommandOptions="selectedCommandOptions"
+            :selectedCommandParams="selectedCommandParams" :selectedCommandName="selectedCommandName"
+            :selectedCommandSelectedArgs="selectedCommandSelectedArgs"
+            :selectedCommandSelectedOptions="selectedCommandSelectedOptions"
+            :selectedCommandSelectedParams="selectedCommandSelectedParams"
+            @modifyInput="(inputToModify: IInputToModify) => { addToOrRemoveFromSelectedList(inputToModify) }" />
     </div>
 </template>
 
@@ -43,10 +31,11 @@ import { ref, computed, watch, onMounted } from 'vue';
 import { useHead } from '@unhead/vue';
 import { useSearchStore } from '@/stores/searchStore';
 import { supabaseClient } from '@/constants/supabaseConfig.js';
-import IconCopy from '@/components/partials/IconCopy.vue';
+import CommandDetailsInputs from '@/components/modules/CommandDetailsInputs.vue';
+import CommandDetailsSyntax from '@/components/modules/CommandDetailsSyntax.vue';
 
 import type { Ref, ComputedRef } from 'vue';
-import type { ISingleCommand, ISingleCommandArgs, ISingleCommandOptions, ISingleCommandParams } from '@/interfaces/ISingleCommand';
+import type { ISingleCommand, ISingleCommandArgs, ISingleCommandOptions, ISingleCommandParams, IInputToModify } from '@/interfaces/ISingleCommand';
 import type { PostgrestSingleResponse } from '@supabase/supabase-js';
 
 const selectedCommandId: ComputedRef<number | null> = computed(() => { return useSearchStore().selectedId; });
@@ -56,6 +45,10 @@ const selectedCommandDescription: Ref<string> = ref('');
 const selectedCommandArgs: Ref<ISingleCommandArgs[]> = ref([]);
 const selectedCommandOptions: Ref<ISingleCommandOptions[]> = ref([]);
 const selectedCommandParams: Ref<ISingleCommandParams[]> = ref([]);
+
+const selectedCommandSelectedArgs: Ref<ISingleCommandArgs[]> = ref([]);
+const selectedCommandSelectedOptions: Ref<ISingleCommandOptions[]> = ref([]);
+const selectedCommandSelectedParams: Ref<ISingleCommandParams[]> = ref([]);
 
 async function getSelectedCommandInfo(): Promise<void> {
     /**
@@ -70,15 +63,18 @@ async function getSelectedCommandInfo(): Promise<void> {
             name
         ),
         commandArgs (
+            id,
             flag,
             placeholder,
             description
         ),
         commandOptions (
+            id,
             flag,
             description
         ),
         commandParams (
+            id,
             placeholder,
             description
         )
@@ -96,31 +92,44 @@ async function getSelectedCommandInfo(): Promise<void> {
         selectedCommandOptions.value = data.commandOptions;
         selectedCommandParams.value = data.commandParams;
 
+        selectedCommandSelectedParams.value = [];
+        selectedCommandSelectedOptions.value = [];
+        selectedCommandSelectedArgs.value = [];
+
         useHead({
             title: `${selectedCommandName.value} ${selectedCommandType.value} command help > cmdpedia`
         });
     };
 };
 
-async function copySyntaxToClipboard(): Promise<void> {
+function addToOrRemoveFromSelectedList(inputToModify: IInputToModify): void {
     /**
-     * Copy the command syntax to the user's clipboard
+     * Add the selected item to the selected list if it's not already there, or remove it if it is
+     * 
+     * @param {IInputToModify} inputToModify - The event emitted from the CommandDetailsParts component
      */
-    const children: HTMLCollection | undefined = document.querySelector('#command-syntax')?.children
-    const contentToCopy: string | null = children ? Array.from(children, ({ textContent }) => textContent?.trim()).join(' ') : null;
+    let selectedList: Ref<any[]>;
+    const targetItem: ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams = inputToModify.item;
 
-    if (contentToCopy === null) {
-        alert('Unable to copy. Please try again.');
-        return;
+    switch (inputToModify.list) {
+        case 'arg':
+            selectedList = selectedCommandSelectedArgs as Ref<ISingleCommandArgs[]>;
+            break;
+        case 'option':
+            selectedList = selectedCommandSelectedOptions as Ref<ISingleCommandOptions[]>;
+            break;
+        case 'param':
+            selectedList = selectedCommandSelectedParams as Ref<ISingleCommandParams[]>;
+            break;
+    }
+
+    if (selectedList.value.includes(targetItem)) {
+        selectedList.value = selectedList.value.filter((selectedItem: ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams) => selectedItem !== targetItem);
     } else {
-        try {
-            await navigator.clipboard.writeText(contentToCopy);
-            alert('Syntax copied to clipboard');
-        } catch (err) {
-            alert('Unable to copy. Please try again.');
-        }
+        selectedList.value.push(targetItem);
     }
 };
+
 
 watch(selectedCommandId, () => {
     getSelectedCommandInfo();
@@ -156,33 +165,5 @@ onMounted(() => {
 #command-description {
     line-height: 1em;
     transition: all 0.5s;
-}
-
-#command-meta {
-    margin-top: 1em;
-    font-size: 16px;
-    line-height: 1.7em;
-    background: var(--color-background);
-    padding: 0.7em 1.25em;
-    width: 100%;
-    min-height: 300px;
-    border: 1px solid var(--color-background-mute);
-    border-radius: 10px;
-    transition: all 0.5s;
-}
-
-#command-meta-copy {
-    float: right;
-    text-align: right;
-    width: 24px;
-    height: 24px;
-    border: 1px solid rgba(0, 0, 0, 0);
-    margin: 3px -3px;
-    border-radius: 3px;
-    transition: border 0.2s;
-}
-
-#command-meta-copy:hover {
-    border: 1px solid var(--color-text);
 }
 </style>

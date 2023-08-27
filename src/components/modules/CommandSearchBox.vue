@@ -77,16 +77,6 @@ onMounted((): void => {
     width: 100%;
 }
 
-@media (max-width: 425px) {
-    #command-search-box-search-term {
-        font-size: 16px;
-    }
-
-    #command-search-box-search-type {
-        font-size: 12px;
-    }
-}
-
 #command-search-box-search-type {
     font-family: 'Inconsolata', 'Consolas', 'Courier New', monospace;
     font-size: 14px;
@@ -95,13 +85,6 @@ onMounted((): void => {
     text-align: right;
     background: none;
     border: none;
-}
-
-select>option {
-    background-color: var(--color-background-soft);
-}
-
-select {
     outline: none;
     appearance: none;
     -webkit-appearance: none !important;
@@ -112,5 +95,19 @@ select {
     background-position-x: 100% !important;
     background-position-y: 16px !important;
     padding-right: 0.8rem !important;
+}
+
+#command-search-box-search-type>option {
+    background-color: var(--color-background-soft);
+}
+
+@media (max-width: 425px) {
+    #command-search-box-search-term {
+        font-size: 16px;
+    }
+
+    #command-search-box-search-type {
+        font-size: 12px;
+    }
 }
 </style>

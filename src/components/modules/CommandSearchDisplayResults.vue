@@ -45,7 +45,7 @@ function getCommandDetails(id: number): void {
     left: 0;
     right: 0;
     margin-top: 25px;
-    padding: 35px 0px 0px 0px;
+    padding: 40px 0px 0px 0px;
     border-radius: 0px 0px 25px 25px;
     background-color: var(--color-background);
     border: 1px solid var(--color-background-mute);
