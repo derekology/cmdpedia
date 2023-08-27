@@ -124,6 +124,9 @@ function setEditFields(inputToEditTarget: ISingleCommandArgs | ISingleCommandOpt
     newInputValue.value = inputToEditTarget?.value || '';
 
     nextTick((): void => {
+        /**
+         * Focus on the edit field after it is rendered
+         */
         const editFieldArray = editField.value as HTMLInputElement[];
 
         if (editFieldArray.length > 0) {
@@ -133,6 +136,9 @@ function setEditFields(inputToEditTarget: ISingleCommandArgs | ISingleCommandOpt
 };
 
 onClickOutside(target, (): void => {
+    /**
+     * Save the edit values when the user clicks outside of the field
+     */
     if (inputToEdit.value) {
         emitAddValueToInput(inputToEdit, newInputValue.value);
         inputToEdit.value = null;
