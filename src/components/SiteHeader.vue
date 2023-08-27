@@ -27,14 +27,14 @@ import IconLightMode from '@/components/partials/IconLightMode.vue';
 
 import type { ComputedRef } from 'vue';
 
-const currentColourScheme: ComputedRef<boolean> = ref(computed(() => { return colourSchemeStore().darkMode }));
+const currentColourScheme: ComputedRef<boolean> = ref(computed((): boolean => colourSchemeStore().darkMode));
 
 function toggleColourScheme() {
     /**
      * Toggle the colour scheme between light and dark mode
      */
     colourSchemeStore().toggleDarkMode();
-}
+};
 </script>
 
 <style scoped>

@@ -35,7 +35,7 @@ function getCommandDetails(id: number): void {
      * @param {number} id The ID of the selected command
      */
     useSearchStore().setSelectedId(id);
-}
+};
 </script>
 
 <style scoped>

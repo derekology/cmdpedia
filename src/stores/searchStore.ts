@@ -68,11 +68,13 @@ export const useSearchStore = defineStore(
 
       data ? allCommands.value = data : allCommands.value = [];
       searchResults.value = getSearchResults();
-    }
+    };
 
     function getSearchResults(): ISingleCommand[] {
       /**
        * Get search results based on search term and search type
+       * 
+       * @returns {ISingleCommand[]} - Search results
        */
       const newSearchResults = allCommands.value.filter((command: ISingleCommand): boolean => {
         if (searchType.value === 0) {
@@ -82,7 +84,7 @@ export const useSearchStore = defineStore(
         };
       });
 
-      return newSearchResults
+      return newSearchResults;
     };
 
     getAllCommands();

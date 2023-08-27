@@ -17,10 +17,10 @@ import type { Ref, ComputedRef } from 'vue';
 import type { ISingleCommand } from '@/interfaces/ISingleCommand';
 
 const showSearchResults: Ref<boolean> = ref(false);
-const searchResults: ComputedRef<ISingleCommand[]> = computed(() => { return useSearchStore().searchResults; });
+const searchResults: ComputedRef<ISingleCommand[]> = computed((): ISingleCommand[] => useSearchStore().searchResults);
 const target: Ref<null> = ref(null);
 
-onClickOutside(target, () => showSearchResults.value = false);
+onClickOutside(target, (): void => { showSearchResults.value = false; });
 </script>
 
 <style scoped>

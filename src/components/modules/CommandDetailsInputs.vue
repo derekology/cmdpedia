@@ -14,8 +14,7 @@
     </div>
     <div id="inputs">
         <div id="options" class="input-container" v-if="selectedSection == 0">
-            <span class="hover-hand command-part command-option"
-                :class="{ active: selectedCommandSelectedOptions.includes(option) }"
+            <span class="hover-hand command-part" :class="{ active: selectedCommandSelectedOptions.includes(option) }"
                 v-for="option in props.selectedCommandOptions"
                 v-on:click="emitInputToModify({ list: 'option', item: option })" :key="option.flag"
                 :title="option.description">
@@ -23,14 +22,14 @@
             </span>
         </div>
         <div id="args" class="input-container" v-if="selectedSection == 1">
-            <span class="hover-hand command-part command-arg" v-for="arg in props.selectedCommandArgs" :key="arg.flag"
+            <span class="hover-hand command-part" v-for="arg in props.selectedCommandArgs" :key="arg.flag"
                 :class="{ active: selectedCommandSelectedArgs.includes(arg) }"
                 v-on:click="emitInputToModify({ list: 'arg', item: arg })" :title="arg.description">
                 {{ `${arg.flag}=<${arg.placeholder}>${arg.required ? '*' : ''}` }}
             </span>
         </div>
         <div id="params" class="input-container" v-if="selectedSection == 2">
-            <span class="hover-hand command-part command-param" v-for="param in props.selectedCommandParams"
+            <span class="hover-hand command-part" v-for="param in props.selectedCommandParams"
                 :class="{ active: selectedCommandSelectedParams.includes(param) }"
                 v-on:click="emitInputToModify({ list: 'param', item: param })" :key="param.placeholder"
                 :title="param.description">
@@ -39,7 +38,8 @@
         </div>
     </div>
     <div id="footnote">
-        <span>* = required</span>
+        * = required<br />
+        &lt;> = placeholder that can be edited by clicking on it
     </div>
 </template>
 
@@ -49,7 +49,7 @@ import { ref } from 'vue';
 import type { Ref, PropType } from 'vue';
 import type { ISingleCommandArgs, ISingleCommandOptions, ISingleCommandParams, IInputToModify } from '@/interfaces/ISingleCommand';
 
-const emit = defineEmits(['modifyInput'])
+const emit = defineEmits(['modifyInput']);
 
 const selectedSection: Ref<number> = ref(0);
 
@@ -91,7 +91,7 @@ function emitInputToModify(inputToModify: IInputToModify): void {
      * @param {IInputToModify} inputToModify - The item to change
      */
     emit('modifyInput', inputToModify);
-}
+};
 
 </script>
 
@@ -184,7 +184,8 @@ function emitInputToModify(inputToModify: IInputToModify): void {
 }
 
 #footnote {
-    margin-top: 0.75em;
+    line-height: 1.5em;
+    margin-top: 1em;
     margin-left: 0.7em;
 }
 </style>

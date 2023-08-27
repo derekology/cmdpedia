@@ -15,7 +15,7 @@ import CommandDetails from '@/components/CommandDetails.vue';
 
 import type { ComputedRef } from 'vue';
 
-const commandSelected: ComputedRef<number | null> = computed((): number | null => { return useSearchStore().selectedId; });
+const commandSelected: ComputedRef<number | null> = computed((): number | null => useSearchStore().selectedId);
 
 function getCommandIdFromUrl(): void {
     /**
