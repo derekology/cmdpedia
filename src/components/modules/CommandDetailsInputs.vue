@@ -6,14 +6,15 @@
         </span>
         <div id="part-select">
             <select id="part-select-dropdown" class="hover-hand" title="argument-type-select" v-model="selectedSection">
-                <option value="0" v-if="props.selectedCommandOptions.length > 0">options</option>
-                <option value="1" v-if="props.selectedCommandArgs.length > 0">arguments</option>
-                <option value="2" v-if="props.selectedCommandParams.length > 0">parameters</option>
+                <option value="all">all</option>
+                <option value="options" v-if="props.selectedCommandOptions.length > 0">options</option>
+                <option value="args" v-if="props.selectedCommandArgs.length > 0">arguments</option>
+                <option value="params" v-if="props.selectedCommandParams.length > 0">parameters</option>
             </select>
         </div>
     </div>
     <div id="inputs">
-        <div id="options" class="input-container" v-if="selectedSection == 0">
+        <div id="options" class="input-container" v-if="selectedSection == 'options' || selectedSection == 'all'">
             <span class="hover-hand command-part" :class="{ active: selectedCommandSelectedOptions.includes(option) }"
                 v-for="option in props.selectedCommandOptions"
                 v-on:click="emitInputToModify({ list: 'option', item: option })" :key="option.flag"
@@ -21,14 +22,14 @@
                 {{ `${option.flag}${option.required ? '*' : ''}` }}
             </span>
         </div>
-        <div id="args" class="input-container" v-if="selectedSection == 1">
+        <div id="args" class="input-container" v-if="selectedSection == 'args' || selectedSection == 'all'">
             <span class="hover-hand command-part" v-for="arg in props.selectedCommandArgs" :key="arg.flag"
                 :class="{ active: selectedCommandSelectedArgs.includes(arg) }"
                 v-on:click="emitInputToModify({ list: 'arg', item: arg })" :title="arg.description">
                 {{ `${arg.flag}=<${arg.placeholder}>${arg.required ? '*' : ''}` }}
             </span>
         </div>
-        <div id="params" class="input-container" v-if="selectedSection == 2">
+        <div id="params" class="input-container" v-if="selectedSection == 'params' || selectedSection == 'all'">
             <span class="hover-hand command-part" v-for="param in props.selectedCommandParams"
                 :class="{ active: selectedCommandSelectedParams.includes(param) }"
                 v-on:click="emitInputToModify({ list: 'param', item: param })" :key="param.placeholder"
@@ -51,7 +52,7 @@ import type { ISingleCommandArgs, ISingleCommandOptions, ISingleCommandParams, I
 
 const emit = defineEmits(['modifyInput']);
 
-const selectedSection: Ref<number> = ref(0);
+const selectedSection: Ref<string> = ref('all');
 
 const props = defineProps({
     selectedCommandName: {

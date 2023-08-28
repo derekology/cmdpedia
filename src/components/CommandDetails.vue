@@ -3,14 +3,14 @@
         <div id="main-info">
             <div>
                 <span id="command-name">
-                    {{ selectedCommandName ? selectedCommandName : '' }}
+                    {{ selectedCommandName && selectedCommandName }}
                 </span>
                 <span id="command-type">
-                    {{ selectedCommandType ? ' (' + selectedCommandType + ')' : '' }}
+                    {{ selectedCommandType && ' (' + selectedCommandType + ')' }}
                 </span>
             </div>
             <div id="command-description">
-                {{ selectedCommandDescription ? selectedCommandDescription : '' }}
+                {{ selectedCommandDescription && selectedCommandDescription.toLowerCase() }}
             </div>
         </div>
         <CommandDetailsSyntax :selectedCommandName="selectedCommandName"
@@ -19,7 +19,9 @@
             :selectedCommandSelectedParams="selectedCommandSelectedParams"
             @resetSelectedInputs="(): void => resetSelectedInputs()"
             @addValueToInput="(inputToEdit, newInputValue): void => { addValueToInput(inputToEdit, newInputValue) }" />
-        <CommandDetailsInputs :selectedCommandArgs="selectedCommandArgs" :selectedCommandOptions="selectedCommandOptions"
+        <CommandDetailsInputs
+            v-if="selectedCommandArgs.length || selectedCommandOptions.length || selectedCommandSelectedParams.length"
+            :selectedCommandArgs="selectedCommandArgs" :selectedCommandOptions="selectedCommandOptions"
             :selectedCommandParams="selectedCommandParams" :selectedCommandName="selectedCommandName"
             :selectedCommandSelectedArgs="selectedCommandSelectedArgs"
             :selectedCommandSelectedOptions="selectedCommandSelectedOptions"
@@ -193,10 +195,16 @@ function addValueToInput(inputToEdit: Ref<ISingleCommandArgs | ISingleCommandOpt
 };
 
 watch(selectedCommandId, (): void => {
+    /**
+     * Get the selected command's information from the database when the selected command changes
+     */
     getSelectedCommandInfo();
 });
 
 onMounted((): void => {
+    /**
+     * Get the selected command's information from the database when the component is mounted
+     */
     getSelectedCommandInfo();
 });
 </script>
@@ -224,7 +232,7 @@ onMounted((): void => {
 }
 
 #command-description {
-    line-height: 1em;
+    line-height: 1.5em;
     transition: all 0.5s;
 }
 </style>
