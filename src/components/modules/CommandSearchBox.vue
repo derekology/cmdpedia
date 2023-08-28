@@ -42,14 +42,23 @@ async function getCommandTypes(): Promise<void> {
 };
 
 watch(searchTerm, (newSearchTerm: string): void => {
+    /**
+     * Update the search term in the store when it changes
+     */
     useSearchStore().setSearchTerm(newSearchTerm);
 });
 
 watch(searchType, (newSearchType: number): void => {
+    /**
+     * Update the search type in the store when it changes
+     */
     useSearchStore().setSearchType(newSearchType);
 });
 
 onMounted((): void => {
+    /**
+     * Get the command types from the database when the component is mounted
+     */
     getCommandTypes();
 });
 </script>
