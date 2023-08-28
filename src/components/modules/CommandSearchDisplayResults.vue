@@ -6,7 +6,7 @@
                 v-on:click="getCommandDetails(result.id)">
                 <span class="command-main">{{ result.name }} ({{ result.commandTypes.name }}) </span><span
                     class="command-details">{{
-                        result.description }}</span>
+                        result.description.toLowerCase() }}</span>
             </router-link>
         </span>
         <span v-else>
