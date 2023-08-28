@@ -49,6 +49,8 @@ export const colourSchemeStore = defineStore(
                     root.style.setProperty('--color-heading', 'var(--vt-c-text-dark-1)')
                     root.style.setProperty('--color-text', 'var(--vt-c-text-dark-2)')
                     root.style.setProperty('--color-hover', 'var(--vt-c-text-dark-3)')
+
+                    root.style.setProperty('--color-error', 'var(--vt-c-error-dark)')
                 }
             } else {
                 if (root && root.style) {
@@ -63,6 +65,8 @@ export const colourSchemeStore = defineStore(
                     root.style.setProperty('--color-heading', 'var(--vt-c-text-light-1)')
                     root.style.setProperty('--color-text', 'var(--vt-c-text-light-1)')
                     root.style.setProperty('--color-hover', 'var(--vt-c-text-light-2)')
+
+                    root.style.setProperty('--color-error', 'var(--vt-c-error-light)')
                 }
             }
         };

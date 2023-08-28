@@ -37,6 +37,7 @@ import { useSearchStore } from '@/stores/searchStore';
 import { supabaseClient } from '@/constants/supabaseConfig.js';
 import CommandDetailsInputs from '@/components/modules/CommandDetailsInputs.vue';
 import CommandDetailsSyntax from '@/components/modules/CommandDetailsSyntax.vue';
+import { useToast, TYPE } from "vue-toastification";
 
 import type { Ref, ComputedRef } from 'vue';
 import type { ISingleCommand, ISingleCommandArgs, ISingleCommandOptions, ISingleCommandParams, IInputToModify } from '@/interfaces/ISingleCommand';
@@ -143,27 +144,27 @@ function addToOrRemoveFromSelectedList(inputToModify: IInputToModify): void {
     const targetItem: ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams = inputToModify.item;
 
     if (targetItem.required) {
-        alert('This input is required.');
-        return;
-    };
+        useToast()('This input is required.', { type: TYPE.ERROR });
+    return;
+};
 
-    switch (inputToModify.list) {
-        case 'arg':
-            selectedList = selectedCommandSelectedArgs as Ref<ISingleCommandArgs[]>;
-            break;
-        case 'option':
-            selectedList = selectedCommandSelectedOptions as Ref<ISingleCommandOptions[]>;
-            break;
-        case 'param':
-            selectedList = selectedCommandSelectedParams as Ref<ISingleCommandParams[]>;
-            break;
-    };
+switch (inputToModify.list) {
+    case 'arg':
+        selectedList = selectedCommandSelectedArgs as Ref<ISingleCommandArgs[]>;
+        break;
+    case 'option':
+        selectedList = selectedCommandSelectedOptions as Ref<ISingleCommandOptions[]>;
+        break;
+    case 'param':
+        selectedList = selectedCommandSelectedParams as Ref<ISingleCommandParams[]>;
+        break;
+};
 
-    if (selectedList.value.includes(targetItem)) {
-        selectedList.value = selectedList.value.filter((selectedItem: ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams): boolean => selectedItem !== targetItem);
-    } else {
-        selectedList.value.push(targetItem);
-    };
+if (selectedList.value.includes(targetItem)) {
+    selectedList.value = selectedList.value.filter((selectedItem: ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams): boolean => selectedItem !== targetItem);
+} else {
+    selectedList.value.push(targetItem);
+};
 };
 
 function removeValueFromInput(inputToEdit: ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams) {

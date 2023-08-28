@@ -43,7 +43,7 @@ import { ref, nextTick } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import IconCopy from '@/components/partials/IconCopy.vue';
 import IconReset from '@/components/partials/IconReset.vue';
-import { useToast } from "vue-toastification";
+import { useToast, TYPE } from "vue-toastification";
 
 import type { Ref, PropType } from 'vue';
 import type { ISingleCommandArgs, ISingleCommandOptions, ISingleCommandParams } from '@/interfaces/ISingleCommand';
@@ -82,15 +82,15 @@ async function copySyntaxToClipboard(): Promise<void> {
     const contentToCopy: string | null = children ? Array.from(children, ({ textContent }): string | undefined => textContent?.trim()).join(' ') : null;
 
     if (contentToCopy === null) {
-        useToast()('Unable to copy');
+        useToast()('Unable to copy', { type: TYPE.ERROR });
         return;
     };
 
     try {
         await navigator.clipboard.writeText(contentToCopy);
-        useToast()('Syntax copied');
+        useToast()('Syntax copied', { type: TYPE.SUCCESS });
     } catch (err) {
-        useToast()('Unable to copy');
+        useToast()('Unable to copy', { type: TYPE.ERROR });
     };
 };
 
@@ -98,7 +98,7 @@ function resetSelectedInputs(): void {
     /**
      * Reset the selected inputs
      */
-    useToast()('Syntax reset');
+    useToast()('Syntax reset', { type: TYPE.SUCCESS });
     emitResetSelectedInputs();
 };
 
