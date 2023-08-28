@@ -144,7 +144,7 @@ function addToOrRemoveFromSelectedList(inputToModify: IInputToModify): void {
     const targetItem: ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams = inputToModify.item;
 
     if (targetItem.required) {
-        useToast()('This input is required.', { type: TYPE.ERROR });
+        useToast()('This input is required', { type: TYPE.ERROR });
     return;
 };
 
