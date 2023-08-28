@@ -19,11 +19,11 @@
             <span class="hover-hand" v-for="arg in props.selectedCommandSelectedArgs" :key="arg.flag"
                 :title="arg.description" v-on:click="setEditFields(arg)">
                 <span v-if="inputToEdit == arg">
-                    {{ arg.flag }}=<input class="editField" type="text" ref="editField" v-model="newInputValue"
-                        v-on:keyup.enter="addValueToInput()" :placeholder="arg.placeholder" />
+                    {{ arg.flag }}{{ arg.separator }}<input class="editField" type="text" ref="editField"
+                        v-model="newInputValue" v-on:keyup.enter="addValueToInput()" :placeholder="arg.placeholder" />
                 </span>
-                <span class="enable-select" v-else>{{ arg.flag }}={{ arg.value ? arg.value + ' ' : '<' + arg.placeholder
-                    + '> ' }}</span>
+                <span class="enable-select" v-else>{{ arg.flag }}{{ arg.separator }}{{ arg.value ? arg.value + ' ' : '<' +
+                    arg.placeholder + '> ' }}</span>
                 </span>
                 <span class="hover-hand" v-for="param in props.selectedCommandSelectedParams" :key="param.placeholder"
                     :title="param.description" v-on:click="setEditFields(param)">

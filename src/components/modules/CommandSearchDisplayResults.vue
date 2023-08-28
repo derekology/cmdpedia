@@ -19,11 +19,11 @@
 import { useSearchStore } from '@/stores/searchStore';
 
 import type { PropType } from 'vue';
-import type { ISingleCommand } from '@/interfaces/ISingleCommand';
+import type { ISingleCommandSummary } from '@/interfaces/ISingleCommand';
 
 const props = defineProps({
     searchResults: {
-        type: Array as PropType<ISingleCommand[]>,
+        type: Array as PropType<ISingleCommandSummary[]>,
         required: true,
     },
 });

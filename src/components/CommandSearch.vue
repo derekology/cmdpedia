@@ -14,10 +14,10 @@ import CommandSearchBox from '@/components/modules/CommandSearchBox.vue';
 import CommandSearchDisplayResults from '@/components/modules/CommandSearchDisplayResults.vue';
 
 import type { Ref, ComputedRef } from 'vue';
-import type { ISingleCommand } from '@/interfaces/ISingleCommand';
+import type { ISingleCommandSummary } from '@/interfaces/ISingleCommand';
 
 const showSearchResults: Ref<boolean> = ref(false);
-const searchResults: ComputedRef<ISingleCommand[]> = computed((): ISingleCommand[] => useSearchStore().searchResults);
+const searchResults: ComputedRef<ISingleCommandSummary[]> = computed((): ISingleCommandSummary[] => useSearchStore().searchResults);
 const target: Ref<null> = ref(null);
 
 onClickOutside(target, (): void => { showSearchResults.value = false; });

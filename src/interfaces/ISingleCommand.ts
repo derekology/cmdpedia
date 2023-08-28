@@ -2,6 +2,7 @@ export interface ISingleCommandArgs {
     id: number,
     flag: string,
     placeholder: string,
+    separator: string | null,
     value?: string,
     description: string,
     required: boolean
@@ -26,6 +27,13 @@ export interface ISingleCommandParams {
 export interface ISingleCommandTypes {
     id: number,
     name: string
+};
+
+export interface ISingleCommandSummary {
+    id: number,
+    name: string,
+    description: string,
+    commandTypes: ISingleCommandTypes
 };
 
 export interface ISingleCommand {

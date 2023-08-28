@@ -29,7 +29,7 @@
             <span class="hover-hand command-input" v-for="arg in props.selectedCommandArgs" :key="arg.flag"
                 :class="{ active: selectedCommandSelectedArgs.includes(arg) }"
                 v-on:click="emitInputToModify({ list: 'arg', item: arg })" :title="arg.description">
-                {{ `${arg.flag}=<${arg.placeholder}>${arg.required ? '*' : ''}` }}
+                {{ `${arg.flag}${arg.separator}<${arg.placeholder}>${arg.required ? '*' : ''}` }}
             </span>
         </div>
         <div class="input-title" v-if="selectedSection == 'all' && props.selectedCommandParams.length > 0">parameters

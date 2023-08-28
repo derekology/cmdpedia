@@ -3,15 +3,15 @@ import { defineStore } from 'pinia';
 import { supabaseClient } from '@/constants/supabaseConfig.js';
 
 import type { Ref } from 'vue';
-import type { ISingleCommand } from '@/interfaces/ISingleCommand';
-import type { PostgrestResponse } from '@supabase/supabase-js';
+import type { ISingleCommandSummary } from '@/interfaces/ISingleCommand';
+import type { PostgrestSingleResponse } from '@supabase/supabase-js';
 
 export const useSearchStore = defineStore(
   'searchStore', () => {
-    const allCommands: Ref<ISingleCommand[]> = ref([]);
+    const allCommands: Ref<ISingleCommandSummary[]> = ref([]);
     const searchTerm: Ref<string> = ref('');
     const searchType: Ref<number> = ref(0);
-    const searchResults: Ref<ISingleCommand[]> = ref([]);
+    const searchResults: Ref<ISingleCommandSummary[]> = ref([]);
     const selectedId: (Ref<number> | Ref<null>) = ref(null);
 
     function setSearchTerm(newSearchTerm: string): void {
@@ -56,7 +56,7 @@ export const useSearchStore = defineStore(
       /**
        * Get all commands from database
        */
-      const { data }: PostgrestResponse<ISingleCommand> = await supabaseClient.from('commandNames').select(`
+      const { data }: PostgrestSingleResponse<ISingleCommandSummary[]> = await supabaseClient.from('commandNames').select(`
         id,
         name,
         description,
@@ -65,18 +65,18 @@ export const useSearchStore = defineStore(
           name
         )
       `)
-
+        .order('name', { ascending: true }) as PostgrestSingleResponse<ISingleCommandSummary[]>
       data ? allCommands.value = data : allCommands.value = [];
       searchResults.value = getSearchResults();
     };
 
-    function getSearchResults(): ISingleCommand[] {
+    function getSearchResults(): ISingleCommandSummary[] {
       /**
        * Get search results based on search term and search type
        * 
-       * @returns {ISingleCommand[]} - Search results
+       * @returns {ISingleCommandSummary[]} - Search results
        */
-      const newSearchResults = allCommands.value.filter((command: ISingleCommand): boolean => {
+      const newSearchResults = allCommands.value.filter((command: ISingleCommandSummary): boolean => {
         if (searchType.value === 0) {
           return command.name.toLowerCase().includes(searchTerm.value.toLowerCase()) || command.description.toLowerCase().includes(searchTerm.value.toLowerCase());
         } else {

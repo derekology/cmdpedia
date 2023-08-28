@@ -72,6 +72,7 @@ async function getSelectedCommandInfo(): Promise<void> {
         commandArgs (
             id,
             flag,
+            separator,
             placeholder,
             description,
             required
@@ -92,7 +93,13 @@ async function getSelectedCommandInfo(): Promise<void> {
         'id',
         'eq',
         selectedCommandId.value
-    ).single();
+    )
+        .order('id')
+        .order('id', { foreignTable: 'commandTypes', ascending: true })
+        .order('order', { foreignTable: 'commandArgs', ascending: true })
+        .order('order', { foreignTable: 'commandOptions', ascending: true })
+        .order('order', { foreignTable: 'commandParams', ascending: true })
+        .single();
 
     if (data) {
         selectedCommandName.value = data.name;
@@ -145,26 +152,26 @@ function addToOrRemoveFromSelectedList(inputToModify: IInputToModify): void {
 
     if (targetItem.required) {
         useToast()('This input is required', { type: TYPE.ERROR });
-    return;
-};
+        return;
+    };
 
-switch (inputToModify.list) {
-    case 'arg':
-        selectedList = selectedCommandSelectedArgs as Ref<ISingleCommandArgs[]>;
-        break;
-    case 'option':
-        selectedList = selectedCommandSelectedOptions as Ref<ISingleCommandOptions[]>;
-        break;
-    case 'param':
-        selectedList = selectedCommandSelectedParams as Ref<ISingleCommandParams[]>;
-        break;
-};
+    switch (inputToModify.list) {
+        case 'arg':
+            selectedList = selectedCommandSelectedArgs as Ref<ISingleCommandArgs[]>;
+            break;
+        case 'option':
+            selectedList = selectedCommandSelectedOptions as Ref<ISingleCommandOptions[]>;
+            break;
+        case 'param':
+            selectedList = selectedCommandSelectedParams as Ref<ISingleCommandParams[]>;
+            break;
+    };
 
-if (selectedList.value.includes(targetItem)) {
-    selectedList.value = selectedList.value.filter((selectedItem: ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams): boolean => selectedItem !== targetItem);
-} else {
-    selectedList.value.push(targetItem);
-};
+    if (selectedList.value.includes(targetItem)) {
+        selectedList.value = selectedList.value.filter((selectedItem: ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams): boolean => selectedItem !== targetItem);
+    } else {
+        selectedList.value.push(targetItem);
+    };
 };
 
 function removeValueFromInput(inputToEdit: ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams) {
