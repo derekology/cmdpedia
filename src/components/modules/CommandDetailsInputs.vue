@@ -15,7 +15,9 @@
     </div>
     <div id="inputs">
         <div id="options" class="input-container" v-if="selectedSection == 'options' || selectedSection == 'all'">
-            <span class="hover-hand command-part" :class="{ active: selectedCommandSelectedOptions.includes(option) }"
+            <div class="input-title" v-if="selectedSection == 'all' && props.selectedCommandOptions.length > 0">options
+            </div>
+            <span class="hover-hand command-input" :class="{ active: selectedCommandSelectedOptions.includes(option) }"
                 v-for="option in props.selectedCommandOptions"
                 v-on:click="emitInputToModify({ list: 'option', item: option })" :key="option.flag"
                 :title="option.description">
@@ -23,14 +25,17 @@
             </span>
         </div>
         <div id="args" class="input-container" v-if="selectedSection == 'args' || selectedSection == 'all'">
-            <span class="hover-hand command-part" v-for="arg in props.selectedCommandArgs" :key="arg.flag"
+            <div class="input-title" v-if="selectedSection == 'all' && props.selectedCommandArgs.length > 0">arguments</div>
+            <span class="hover-hand command-input" v-for="arg in props.selectedCommandArgs" :key="arg.flag"
                 :class="{ active: selectedCommandSelectedArgs.includes(arg) }"
                 v-on:click="emitInputToModify({ list: 'arg', item: arg })" :title="arg.description">
                 {{ `${arg.flag}=<${arg.placeholder}>${arg.required ? '*' : ''}` }}
             </span>
         </div>
         <div id="params" class="input-container" v-if="selectedSection == 'params' || selectedSection == 'all'">
-            <span class="hover-hand command-part" v-for="param in props.selectedCommandParams"
+            <div class="input-title" v-if="selectedSection == 'all' && props.selectedCommandParams.length > 0">parameters
+            </div>
+            <span class="hover-hand command-input" v-for="param in props.selectedCommandParams"
                 :class="{ active: selectedCommandSelectedParams.includes(param) }"
                 v-on:click="emitInputToModify({ list: 'param', item: param })" :key="param.placeholder"
                 :title="param.description">
@@ -117,6 +122,7 @@ function emitInputToModify(inputToModify: IInputToModify): void {
 #title {
     font-size: 1.2em;
     line-height: 1.2em;
+    font-weight: bold;
 }
 
 #desc,
@@ -169,7 +175,18 @@ function emitInputToModify(inputToModify: IInputToModify): void {
     align-items: center;
 }
 
-.command-part {
+.input-container:not(:first-of-type) {
+    margin: 0.7em 0;
+}
+
+.input-title {
+    display: block;
+    width: 100%;
+    margin-left: 0.7em;
+    font-size: 0.8em;
+}
+
+.command-input {
     font-size: small;
     line-height: 1.5em;
     border: 1px solid var(--color-border);
@@ -179,7 +196,7 @@ function emitInputToModify(inputToModify: IInputToModify): void {
     transition: all 0.2s;
 }
 
-.command-part:hover,
+.command-input:hover,
 .active {
     background-color: var(--color-border-hover);
 }
