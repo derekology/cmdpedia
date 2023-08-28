@@ -188,7 +188,7 @@ function addValueToInput(inputToEdit: Ref<ISingleCommandArgs | ISingleCommandOpt
     if (!newInputValue) {
         removeValueFromInput(targetItem);
         return;
-    }
+    };
 
     targetItem.value = newInputValue;
     customizedCommandInputs.value.push(targetItem);
