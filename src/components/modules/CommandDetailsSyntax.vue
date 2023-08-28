@@ -1,7 +1,7 @@
 <template>
     <div id="command-meta">
         <span id="comment-meta-actions">
-            <span id="command-meta-reset" title="Reset syntax" class="hover-hand" v-on:click="emitResetSelectedInputs()">
+            <span id="command-meta-reset" title="Reset syntax" class="hover-hand" v-on:click="resetSelectedInputs()">
                 <IconReset />
             </span>
             <span id="command-meta-copy" title="Copy syntax" class="hover-hand" v-on:click="copySyntaxToClipboard()">
@@ -43,6 +43,7 @@ import { ref, nextTick } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import IconCopy from '@/components/partials/IconCopy.vue';
 import IconReset from '@/components/partials/IconReset.vue';
+import { useToast } from "vue-toastification";
 
 import type { Ref, PropType } from 'vue';
 import type { ISingleCommandArgs, ISingleCommandOptions, ISingleCommandParams } from '@/interfaces/ISingleCommand';
@@ -81,16 +82,24 @@ async function copySyntaxToClipboard(): Promise<void> {
     const contentToCopy: string | null = children ? Array.from(children, ({ textContent }): string | undefined => textContent?.trim()).join(' ') : null;
 
     if (contentToCopy === null) {
-        alert('Unable to copy. Please try again.');
+        useToast()('Unable to copy');
         return;
-    }
+    };
 
     try {
         await navigator.clipboard.writeText(contentToCopy);
-        alert('Syntax copied to clipboard');
+        useToast()('Syntax copied');
     } catch (err) {
-        alert('Unable to copy. Please try again.');
+        useToast()('Unable to copy');
     };
+};
+
+function resetSelectedInputs(): void {
+    /**
+     * Reset the selected inputs
+     */
+    useToast()('Syntax reset');
+    emitResetSelectedInputs();
 };
 
 function emitResetSelectedInputs(): void {
@@ -129,7 +138,7 @@ function setEditFields(inputToEditTarget: ISingleCommandArgs | ISingleCommandOpt
      */
     if (inputToEdit.value && newInputValue.value) {
         emitAddValueToInput(inputToEdit, newInputValue.value);
-    }
+    };
 
     inputToEdit.value = inputToEditTarget;
     newInputValue.value = inputToEditTarget?.value || '';
@@ -142,7 +151,7 @@ function setEditFields(inputToEditTarget: ISingleCommandArgs | ISingleCommandOpt
 
         if (editFieldArray.length > 0) {
             editFieldArray[0].focus();
-        }
+        };
     });
 };
 
