@@ -20,7 +20,7 @@
                 :title="arg.description" v-on:click="setEditFields(arg)">
                 <span v-if="inputToEdit == arg">
                     {{ arg.flag }}=<input class="editField" type="text" ref="editField" v-model="newInputValue"
-                        :placeholder="arg.placeholder" />
+                        v-on:keyup.enter="addValueToInput()" :placeholder="arg.placeholder" />
                 </span>
                 <span class="enable-select" v-else>{{ arg.flag }}={{ arg.value ? arg.value + ' ' : '<' + arg.placeholder
                     + '> ' }}</span>
@@ -29,7 +29,7 @@
                     :title="param.description" v-on:click="setEditFields(param)">
                     <span v-if="inputToEdit == param">
                         <input class="editField" type="text" ref="editField" v-model="newInputValue"
-                            :placeholder="param.placeholder" />
+                            v-on:keyup.enter="addValueToInput()" :placeholder="param.placeholder" />
                     </span>
                     <span class="enable-select" v-else>
                         {{ param.value ? param.value + ' ' : '<' + param.placeholder + '> ' }} </span>
@@ -100,6 +100,17 @@ function emitResetSelectedInputs(): void {
     emit('resetSelectedInputs');
 };
 
+function addValueToInput(): void {
+    /**
+     * Save the user's input value
+     */
+    if (inputToEdit.value) {
+        emitAddValueToInput(inputToEdit, newInputValue.value);
+        inputToEdit.value = null;
+        newInputValue.value = '';
+    };
+};
+
 function emitAddValueToInput(inputToEdit: Ref<ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams | null>, newInputValue: string): void {
     /**
      * Emit the item to add value to to the parent component
@@ -137,13 +148,9 @@ function setEditFields(inputToEditTarget: ISingleCommandArgs | ISingleCommandOpt
 
 onClickOutside(target, (): void => {
     /**
-     * Save the edit values when the user clicks outside of the field
+     * Save the user's input value when the user clicks outside of the field
      */
-    if (inputToEdit.value) {
-        emitAddValueToInput(inputToEdit, newInputValue.value);
-        inputToEdit.value = null;
-        newInputValue.value = ''
-    };
+    addValueToInput();
 });
 
 </script>
