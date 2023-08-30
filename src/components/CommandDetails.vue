@@ -38,6 +38,7 @@ import { supabaseClient } from '@/constants/supabaseConfig.js';
 import CommandDetailsInputs from '@/components/modules/CommandDetailsInputs.vue';
 import CommandDetailsSyntax from '@/components/modules/CommandDetailsSyntax.vue';
 import { useToast, TYPE } from "vue-toastification";
+import { PSCOMMONARGS, PSCOMMONOPTIONS } from '@/constants/PSCommonParams';
 
 import type { Ref, ComputedRef } from 'vue';
 import type { ISingleCommand, ISingleCommandArgs, ISingleCommandOptions, ISingleCommandParams, IInputToModify } from '@/interfaces/ISingleCommand';
@@ -109,11 +110,26 @@ async function getSelectedCommandInfo(): Promise<void> {
         selectedCommandOptions.value = data.commandOptions;
         selectedCommandParams.value = data.commandParams;
 
+        selectedCommandType.value === 'powershell' && addPSCommonInputs();
+
         resetSelectedInputs();
 
         useHead({
             title: `${selectedCommandName.value} ${selectedCommandType.value} command help > cmdpedia`
         });
+    };
+};
+
+function addPSCommonInputs(): void {
+    /**
+     * Add the common PowerShell inputs to the selected command
+     */
+    for (const arg of PSCOMMONARGS) {
+        selectedCommandArgs.value.push(arg);
+    };
+
+    for (const option of PSCOMMONOPTIONS) {
+        selectedCommandOptions.value.push(option);
     };
 };
 
