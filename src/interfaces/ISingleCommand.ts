@@ -44,10 +44,17 @@ export interface ISingleCommand {
     commandTypes: ISingleCommandTypes,
     commandArgs: ISingleCommandArgs[],
     commandParams: ISingleCommandParams[],
-    commandOptions: ISingleCommandOptions[],
+    commandOptions: ISingleCommandOptions[]
 };
 
 export interface IInputToModify {
     list: 'arg' | 'option' | 'param',
     item: ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams
 };
+
+export interface ICommandToSave {
+    id: number,
+    name: string,
+    description: string,
+    command: string
+}

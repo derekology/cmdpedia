@@ -1,10 +1,16 @@
 <template>
     <div id="command-meta">
         <span id="comment-meta-actions">
-            <span id="command-meta-reset" title="Reset syntax" class="hover-hand" v-on:click="resetSelectedInputs()">
+            <span id="command-meta-reset" title="Reset syntax" class="command-meta-icon hover-hand"
+                v-on:click="resetSelectedInputs()">
                 <IconReset />
             </span>
-            <span id="command-meta-copy" title="Copy syntax" class="hover-hand" v-on:click="copySyntaxToClipboard()">
+            <span id="command-meta-add" title="Add syntax to sidebar" class="command-meta-icon hover-hand"
+                v-on:click="addSyntaxToSidebar()">
+                <IconAdd />
+            </span>
+            <span id="command-meta-copy" title="Copy syntax" class="command-meta-icon hover-hand"
+                v-on:click="copySyntaxToClipboard()">
                 <IconCopy />
             </span>
         </span>
@@ -41,12 +47,14 @@
 <script setup lang="ts">
 import { ref, nextTick } from 'vue';
 import { onClickOutside } from '@vueuse/core';
+import { useToast, TYPE } from "vue-toastification";
+import { sidebarStore } from '@/stores/sidebarStore';
 import IconCopy from '@/components/partials/IconCopy.vue';
 import IconReset from '@/components/partials/IconReset.vue';
-import { useToast, TYPE } from "vue-toastification";
+import IconAdd from '../partials/IconAdd.vue';
 
 import type { Ref, PropType } from 'vue';
-import type { ISingleCommandArgs, ISingleCommandOptions, ISingleCommandParams } from '@/interfaces/ISingleCommand';
+import type { ISingleCommandArgs, ISingleCommandOptions, ISingleCommandParams, ICommandToSave } from '@/interfaces/ISingleCommand';
 
 const emit = defineEmits(['resetSelectedInputs', 'addValueToInput'])
 
@@ -74,11 +82,28 @@ const newInputValue: Ref<string> = ref('');
 const target: Ref<null> = ref(null);
 const editField: Ref<HTMLInputElement[] | null> = ref(null);
 
+function addSyntaxToSidebar(): void {
+    /**
+     * Save the syntax to the sidebar
+     */
+    const children: HTMLCollection | undefined = document.querySelector('#command-syntax')?.children;
+    const contentToAdd: string | null = children ? Array.from(children, ({ textContent }): string | undefined => textContent?.trim()).join(' ') : null;
+
+    const commandToAdd: ICommandToSave = {
+        id: Date.now() + Math.random(),
+        name: props.selectedCommandName,
+        description: '',
+        command: contentToAdd ? contentToAdd : 'Error. Please try again.'
+    };
+
+    sidebarStore().saveCommandToSidebar(commandToAdd);
+};
+
 async function copySyntaxToClipboard(): Promise<void> {
     /**
      * Copy the command syntax to the user's clipboard
      */
-    const children: HTMLCollection | undefined = document.querySelector('#command-syntax')?.children
+    const children: HTMLCollection | undefined = document.querySelector('#command-syntax')?.children;
     const contentToCopy: string | null = children ? Array.from(children, ({ textContent }): string | undefined => textContent?.trim()).join(' ') : null;
 
     if (contentToCopy === null) {
@@ -178,12 +203,11 @@ onClickOutside(target, (): void => {
     transition: all 0.5s;
 }
 
-#comment-meta-actions>span:first-of-type {
+#comment-meta-actions>span {
     margin-left: 12px;
 }
 
-#command-meta-copy,
-#command-meta-reset {
+.command-meta-icon {
     float: right;
     text-align: right;
     width: 24px;
@@ -194,8 +218,7 @@ onClickOutside(target, (): void => {
     transition: border 0.2s;
 }
 
-#command-meta-copy:hover,
-#command-meta-reset:hover {
+.command-meta-icon:hover {
     border: 1px solid var(--color-text);
 }
 
