@@ -55,6 +55,7 @@ export interface IInputToModify {
 export interface ICommandToSave {
     id: number,
     name: string,
+    saveTime?: Date,
     description: string,
     command: string
 }
