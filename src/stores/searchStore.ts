@@ -76,7 +76,7 @@ export const useSearchStore = defineStore(
        * 
        * @returns {ISingleCommandSummary[]} - Search results
        */
-      const newSearchResults = allCommands.value.filter((command: ISingleCommandSummary): boolean => {
+      const newSearchResults: ISingleCommandSummary[] = allCommands.value.filter((command: ISingleCommandSummary): boolean => {
         if (searchType.value === 0) {
           return command.name.toLowerCase().includes(searchTerm.value.toLowerCase()) || command.description.toLowerCase().includes(searchTerm.value.toLowerCase());
         } else {

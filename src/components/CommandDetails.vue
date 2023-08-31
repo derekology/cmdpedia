@@ -208,7 +208,7 @@ function addValueToInput(inputToEdit: Ref<ISingleCommandArgs | ISingleCommandOpt
      * @param {ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams | null} inputToEdit - The event emitted from the CommandDetailsParts component
      * @param {string} newInputValue - The value to add to the input
      */
-    const targetItem = inputToEdit?.value as ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams;
+    const targetItem: ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams = inputToEdit?.value as ISingleCommandArgs | ISingleCommandOptions | ISingleCommandParams;
 
     if (!newInputValue) {
         removeValueFromInput(targetItem);

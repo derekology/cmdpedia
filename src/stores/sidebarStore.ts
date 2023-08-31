@@ -43,7 +43,7 @@ export const sidebarStore = defineStore(
 
             if (savedCommandsFromLocalStorage) {
                 for (let i = 0; i < savedCommandsFromLocalStorage.length; i++) {
-                    const savedCommand = savedCommandsFromLocalStorage[i];
+                    const savedCommand: ICommandToSave = savedCommandsFromLocalStorage[i];
                     savedCommands.insertAtEnd(savedCommand);
                 };
             };

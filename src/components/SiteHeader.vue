@@ -38,7 +38,7 @@ import IconCloseSidebar from '@/components/partials/IconCloseSidebar.vue';
 import type { Ref, ComputedRef } from 'vue';
 
 const currentDarkColourScheme: ComputedRef<boolean> = ref(computed((): boolean => colourSchemeStore().darkMode));
-const sidebarOpen = ref(computed((): boolean => sidebarStore().sidebarOpen));
+const sidebarOpen: ComputedRef<boolean> = ref(computed((): boolean => sidebarStore().sidebarOpen));
 const onAboutPage: ComputedRef<boolean> = ref(computed((): boolean => useRoute().path === '/about'));
 const lastPage: Ref<string> = ref('');
 

@@ -192,7 +192,7 @@ function setEditFields(inputToEditTarget: ISingleCommandArgs | ISingleCommandOpt
         /**
          * Focus on the edit field after it is rendered
          */
-        const editFieldArray = editField.value as HTMLInputElement[];
+        const editFieldArray: HTMLInputElement[] = editField.value as HTMLInputElement[];
 
         if (editFieldArray.length > 0) {
             editFieldArray[0].focus();
