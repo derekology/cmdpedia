@@ -10,9 +10,10 @@ export interface ILinkedList<T> {
     clear(): void;
 };
 
-class Node<T> {
+export class Node<T> {
     public next: Node<T> | null = null;
     public prev: Node<T> | null = null;
+
     constructor(public data: T) { }
 };
 
@@ -21,7 +22,13 @@ export class LinkedList<T> implements ILinkedList<T> {
     public size: number = 0;
 
     public insertInBegin(data: T): Node<T> {
-        const node = new Node(data);
+        /**
+         * Insert node in the beginning of the list
+         * 
+         * @param {T} data - data to insert
+         */
+        const node: Node<T> | null = new Node(data);
+
         if (!this.head) {
             this.head = node;
         } else {
@@ -35,7 +42,13 @@ export class LinkedList<T> implements ILinkedList<T> {
     };
 
     public insertAtEnd(data: T): Node<T> {
-        const node = new Node(data);
+        /**
+         * Insert node at the end of the list
+         * 
+         * @param {T} data - data to insert
+         */
+        const node: Node<T> | null = new Node(data);
+
         if (!this.head) {
             this.head = node;
         } else {
@@ -52,45 +65,65 @@ export class LinkedList<T> implements ILinkedList<T> {
     };
 
     public moveOneSpotUp(data: Node<T>): void {
-        const node = this.head;
+        /**
+         * Move node one spot up in the list
+         * 
+         * @param {Node<T>} data - node to move
+         */
+        let node: Node<T> | null = this.head;
+
         while (node) {
             if (node === data) {
                 if (node.prev) {
-                    const prevNode = node.prev;
-                    const prevPrevNode = prevNode.prev;
-                    const nextNode = node.next;
+                    const prevNode: Node<T> = node.prev;
+                    const prevPrevNode: Node<T> | null = prevNode.prev;
+                    const nextNode: Node<T> | null = node.next;
 
                     prevNode.prev = node;
                     prevNode.next = nextNode;
                     node.prev = prevPrevNode;
                     node.next = prevNode;
+
                     if (prevPrevNode) {
                         prevPrevNode.next = node;
+                    } else {
+                        this.head = node;
                     };
+
                     if (nextNode) {
                         nextNode.prev = prevNode;
                     };
                 };
                 break;
             };
+            node = node.next;
         };
     };
 
     public moveOneSpotDown(data: Node<T>): void {
-        const node = this.head;
+        /**
+         * Move node one spot down in the list
+         * 
+         * @param {Node<T>} data - node to move
+         */
+        let node: Node<T> | null = this.head;
+
         while (node) {
             if (node === data) {
                 if (node.next) {
-                    const nextNode = node.next;
-                    const nextNextNode = nextNode.next;
-                    const prevNode = node.prev;
+                    const nextNode: Node<T> = node.next;
+                    const nextNextNode: Node<T> | null = nextNode.next;
+                    const prevNode: Node<T> | null = node.prev;
 
                     nextNode.prev = prevNode;
                     nextNode.next = node;
                     node.prev = nextNode;
                     node.next = nextNextNode;
+
                     if (prevNode) {
                         prevNode.next = nextNode;
+                    } else {
+                        this.head = nextNode;
                     };
                     if (nextNextNode) {
                         nextNextNode.prev = node;
@@ -98,32 +131,51 @@ export class LinkedList<T> implements ILinkedList<T> {
                 };
                 break;
             };
+            node = node.next;
         };
     };
 
     public traverseNodes(): T[] {
+        /**
+         * Traverse nodes and return array of its data
+         */
         const nodes: T[] = [];
-        let node = this.head;
+        let node: Node<T> | null = this.head;
+
         while (node) {
             nodes.push(node.data);
             node = node.next;
         };
+
         return nodes;
     };
 
     public searchForNode(comparator: (data: T) => boolean): Node<T> | null {
-        let node = this.head;
+        /**
+         * Search for node in the list
+         * 
+         * @param {Function} comparator - function to compare data
+         */
+        let node: Node<T> | null = this.head;
+
         while (node) {
             if (comparator(node.data)) {
                 return node;
             };
             node = node.next;
         };
+
         return null;
     };
 
     public deleteNode(data: Node<T>): void {
-        let node = this.head;
+        /**
+         * Delete node from the list
+         * 
+         * @param {Node<T>} data - node to delete
+         */
+        let node: Node<T> | null = this.head;
+
         while (node) {
             if (node === data) {
                 if (!node.prev) {
@@ -143,6 +195,9 @@ export class LinkedList<T> implements ILinkedList<T> {
     };
 
     public clear(): void {
+        /**
+         * Clear list
+         */
         this.head = null;
         this.size = 0;
     };
