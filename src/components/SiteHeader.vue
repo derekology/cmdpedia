@@ -7,16 +7,16 @@
             <nav>
                 <RouterLink v-if="onAboutPage" :to="lastPage ? lastPage : '/'">{{ lastPage ? 'back' : 'home' }}</RouterLink>
                 <RouterLink v-else to="/about" v-on:click="captureLastPage()">about</RouterLink>
-                <span class="colour-scheme-icon hover-hand" v-on:click="toggleColourScheme" v-if="currentColourScheme">
+                <span class="colour-scheme-icon hover-hand" v-on:click="toggleColourScheme" v-if="currentDarkColourScheme">
                     <IconLightMode />
                 </span>
                 <span class="colour-scheme-icon hover-hand" v-on:click="toggleColourScheme" v-else>
                     <IconDarkMode />
                 </span>
-                <span class="colour-scheme-icon hover-hand" v-on:click="toggleSidebar" v-if="sidebarOpen">
+                <span class="colour-scheme-icon hover-hand" v-if="sidebarOpen">
                     <IconCloseSidebar />
                 </span>
-                <span class="colour-scheme-icon hover-hand" v-on:click="toggleSidebar" v-else>
+                <span class="colour-scheme-icon hover-hand" v-on:click="openSidebar" v-else>
                     <IconOpenSidebar />
                 </span>
             </nav>
@@ -37,7 +37,7 @@ import IconCloseSidebar from '@/components/partials/IconCloseSidebar.vue';
 
 import type { Ref, ComputedRef } from 'vue';
 
-const currentColourScheme: ComputedRef<boolean> = ref(computed((): boolean => colourSchemeStore().darkMode));
+const currentDarkColourScheme: ComputedRef<boolean> = ref(computed((): boolean => colourSchemeStore().darkMode));
 const sidebarOpen = ref(computed((): boolean => sidebarStore().sidebarOpen));
 const onAboutPage: ComputedRef<boolean> = ref(computed((): boolean => useRoute().path === '/about'));
 const lastPage: Ref<string> = ref('');
@@ -56,11 +56,11 @@ function captureLastPage(): void {
     lastPage.value = window.location.pathname.replace("/", "");
 };
 
-function toggleSidebar(): void {
+function openSidebar(): void {
     /**
-     * Open the sidebar
+     * Toggle the sidebar
      */
-    sidebarStore().toggleSidebar();
+    sidebarStore().setSidebarOpen();
 };
 </script>
 
