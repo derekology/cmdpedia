@@ -15,8 +15,10 @@ const app = createApp(App);
 const head = createHead()
 const toastOptions: PluginOptions = {
     position: POSITION.TOP_CENTER,
-    timeout: 1500,
+    timeout: 1000,
     transition: 'Vue-Toastification__fade',
+    maxToasts: 5,
+    newestOnTop: true,
     closeOnClick: true,
     pauseOnFocusLoss: false,
     pauseOnHover: true,
