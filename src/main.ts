@@ -14,7 +14,7 @@ import router from '@/router';
 const app = createApp(App);
 const head = createHead()
 const toastOptions: PluginOptions = {
-    position: POSITION.BOTTOM_RIGHT,
+    position: POSITION.TOP_CENTER,
     timeout: 1000,
     closeOnClick: true,
     pauseOnFocusLoss: false,

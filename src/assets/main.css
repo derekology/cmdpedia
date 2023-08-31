@@ -37,6 +37,7 @@ input:focus, input:active {
   min-height: auto !important;
   max-height: 300px !important;
   padding: 0.75em !important;
+  z-index: 99999 !important;
 }
 
 .Vue-Toastification__toast--error {
