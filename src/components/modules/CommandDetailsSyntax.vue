@@ -106,7 +106,7 @@ function saveCommandToSidebar(): void {
     /**
      * Save the current command to the sidebar
      */
-    if (sidebarStore().savedCommands.length >= 20) {
+    if (sidebarStore().savedCommands.size >= 20) {
         useToast()('Maximum number of saved commands reached', { type: TYPE.ERROR });
     } else {
         const children: HTMLCollection | undefined = document.querySelector('#command-syntax')?.children;
