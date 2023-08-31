@@ -36,6 +36,7 @@ export const sidebarStore = defineStore(
              */
             if (!localStorage.getItem('savedCommands')) {
                 localStorage.setItem('savedCommands', JSON.stringify([]));
+                savedCommands.value = JSON.parse(localStorage.getItem('savedCommands') as string);
             };
         };
 
