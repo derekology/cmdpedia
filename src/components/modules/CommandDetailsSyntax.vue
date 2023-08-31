@@ -133,7 +133,7 @@ async function copySyntaxToClipboard(): Promise<void> {
 
     try {
         await navigator.clipboard.writeText(contentToCopy);
-        useToast()('Syntax copied', { type: TYPE.SUCCESS });
+        useToast()('Command copied', { type: TYPE.SUCCESS });
     } catch (err) {
         useToast()('Unable to copy', { type: TYPE.ERROR });
     };
