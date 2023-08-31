@@ -15,7 +15,8 @@ const app = createApp(App);
 const head = createHead()
 const toastOptions: PluginOptions = {
     position: POSITION.TOP_CENTER,
-    timeout: 1000,
+    timeout: 1500,
+    transition: 'Vue-Toastification__fade',
     closeOnClick: true,
     pauseOnFocusLoss: false,
     pauseOnHover: true,
@@ -26,7 +27,7 @@ const toastOptions: PluginOptions = {
     closeButton: false,
     icon: false,
     rtl: false,
-    toastClassName: "toast"
+    toastClassName: 'toast'
 }
 
 app.use(createPinia());
