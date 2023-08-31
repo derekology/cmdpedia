@@ -1,13 +1,18 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
+import { LinkedList, Node } from '@/interfaces/IGeneralData';
 
 import type { Ref } from 'vue';
 import type { ICommandToSave } from '@/interfaces/ISingleCommand';
+import type { ILinkedList } from '@/interfaces/IGeneralData';
 
 export const sidebarStore = defineStore(
     'sidebarStore', () => {
+        const savedCommands: ILinkedList<ICommandToSave> = new LinkedList<ICommandToSave>();
+        getSavedCommands();
+
         const sidebarOpen: Ref<boolean> = ref(false);
-        const savedCommands: Ref<ICommandToSave[]> = ref(JSON.parse(localStorage.getItem('savedCommands') as string));
+        const savedCommandsUpdatedFlag: Ref<boolean> = ref(false);
 
         function setSidebarOpen(): void {
             /**
@@ -30,14 +35,36 @@ export const sidebarStore = defineStore(
             sidebarOpen.value = !sidebarOpen.value;
         };
 
-        function initiateLocalStore(): void {
+        function getSavedCommands(): void {
             /**
-             * Initiate local storage with empty array if it doesn't exist
+             * Get saved commands from local storage
              */
-            if (!localStorage.getItem('savedCommands')) {
-                localStorage.setItem('savedCommands', JSON.stringify([]));
-                savedCommands.value = JSON.parse(localStorage.getItem('savedCommands') as string);
+            const savedCommandsFromLocalStorage: ICommandToSave[] = JSON.parse(localStorage.getItem('savedCommands') as string);
+
+            if (savedCommandsFromLocalStorage) {
+                for (let i = 0; i < savedCommandsFromLocalStorage.length; i++) {
+                    const savedCommand = savedCommandsFromLocalStorage[i];
+                    savedCommands.insertAtEnd(savedCommand);
+                };
             };
+        };
+
+        function saveCommandsToLocalStore(): void {
+            /**
+             * Save current commands list to local storage
+             */
+            localStorage.setItem('savedCommands', JSON.stringify(savedCommands.traverseNodes()));
+
+            setCommandsUpdatedFlag(true);
+        };
+
+        function setCommandsUpdatedFlag(newValue: boolean): void {
+            /**
+             * Set commands updated flag to new value
+             * 
+             * @param {boolean} newValue - new value for commands updated flag
+             */
+            savedCommandsUpdatedFlag.value = newValue;
         };
 
         function saveCommandToLocalStore(commandToSave: ICommandToSave): void {
@@ -46,9 +73,39 @@ export const sidebarStore = defineStore(
              * 
              * @param {ICommandToSave} commandToSave - command to save to sidebar
              */
-            const newSavedCommands = savedCommands.value.concat(commandToSave);
-            localStorage.setItem('savedCommands', JSON.stringify(newSavedCommands));
-            savedCommands.value = JSON.parse(localStorage.getItem('savedCommands') as string);
+            savedCommands.insertAtEnd(commandToSave);
+
+            saveCommandsToLocalStore();
+        };
+
+        function moveCommandOneSpotUp(id: number): void {
+            /**
+             * Move command one spot up in list
+             * 
+             * @param {number} id - id of command to move
+             */
+            const nodeToMove: Node<ICommandToSave> | null = savedCommands.searchForNode((node) => node.id === id);
+
+            if (nodeToMove) {
+                savedCommands.moveOneSpotUp(nodeToMove);
+            };
+
+            saveCommandsToLocalStore();
+        };
+
+        function moveCommandOneSpotDown(id: number): void {
+            /**
+             * Move command one spot up in list
+             * 
+             * @param {number} id - id of command to move
+             */
+            const nodeToMove: Node<ICommandToSave> | null = savedCommands.searchForNode((node) => node.id === id);
+
+            if (nodeToMove) {
+                savedCommands.moveOneSpotDown(nodeToMove);
+            };
+
+            saveCommandsToLocalStore();
         };
 
         function deleteSavedCommand(id: number): void {
@@ -57,27 +114,35 @@ export const sidebarStore = defineStore(
              * 
              * @param {number} id - id of command to delete
              */
-            const newSavedCommands = savedCommands.value.filter((command) => command.id !== id);
-            localStorage.setItem('savedCommands', JSON.stringify(newSavedCommands));
-            savedCommands.value = JSON.parse(localStorage.getItem('savedCommands') as string);
-        }
+            const nodeToDelete: Node<ICommandToSave> | null = savedCommands.searchForNode((node) => node.id === id);
+
+            if (nodeToDelete) {
+                savedCommands.deleteNode(nodeToDelete);
+            };
+
+            saveCommandsToLocalStore();
+        };
 
         function clearSavedCommands(): void {
             /**
              * Clear all saved commands from local storage
              */
-            localStorage.setItem('savedCommands', JSON.stringify([]));
-            savedCommands.value = JSON.parse(localStorage.getItem('savedCommands') as string);
-        }
+            savedCommands.clear();
+
+            saveCommandsToLocalStore();
+        };
 
         return {
             sidebarOpen,
             savedCommands,
+            savedCommandsUpdatedFlag,
             setSidebarOpen,
             setSidebarClosed,
+            setCommandsUpdatedFlag,
             toggleSidebar,
-            initiateLocalStore,
             saveCommandToLocalStore,
+            moveCommandOneSpotUp,
+            moveCommandOneSpotDown,
             deleteSavedCommand,
             clearSavedCommands
         };

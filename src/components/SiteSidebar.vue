@@ -12,11 +12,12 @@
                 </span>
             </div>
             <div id="saved-commands">
-                <div id="no-results" v-if="savedCommands.length == 0">
+                <div id="no-results" v-if="savedCommandsList.length == 0">
                     <span>No commands saved.</span>
                 </div>
-                <div v-for="command in savedCommands" :key="command.id" class="saved-command" v-else>
-                    <span id="comment-meta-actions">
+                <div v-for="command in savedCommandsList" :key="command.id" class="saved-command"
+                    v-on:mouseenter="hoveredCommandId = command.id" v-on:mouseleave="hoveredCommandId = null" v-else>
+                    <span id="comment-meta-actions" v-if="command.id == hoveredCommandId">
                         <span id="command-meta-remove" title="Remove command" class="command-meta-icon hover-hand"
                             v-on:click="deleteSavedCommand(command.id)">
                             <IconClose />
@@ -25,16 +26,24 @@
                             v-on:click="copySavedCommandToClipboard(command.command)">
                             <IconCopy />
                         </span>
+                        <span id="command-meta-move-down" title="Move command down" class="command-meta-icon hover-hand"
+                            v-on:click="moveCommandOneSpotDown(command.id)">
+                            <IconDown />
+                        </span>
+                        <span id="command-meta-move-up" title="Move command up" class="command-meta-icon hover-hand"
+                            v-on:click="moveCommandOneSpotUp(command.id)">
+                            <IconUp />
+                        </span>
                     </span>
                     <div class="saved-command-command">{{ command.command }}</div>
                 </div>
             </div>
             <div id="all-command-actions">
-                <span id="copy-all-saved" v-on:click="CopyAllSavedCommands" v-if="savedCommands.length > 0"
+                <span id="copy-all-saved" v-on:click="CopyAllSavedCommands" v-if="savedCommandsList.length > 0"
                     class="hover-hand">
                     Copy all
                 </span>
-                <span id="remove-all-saved" v-on:click="clearSavedCommands" v-if="savedCommands.length > 0"
+                <span id="remove-all-saved" v-on:click="clearSavedCommands" v-if="savedCommandsList.length > 0"
                     class="hover-hand">
                     Remove all
                 </span>
@@ -44,18 +53,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { sidebarStore } from '@/stores/sidebarStore';
 import { onClickOutside } from '@vueuse/core';
 import { useToast, TYPE } from "vue-toastification";
 import IconClose from './partials/IconClose.vue';
 import IconCopy from '@/components/partials/IconCopy.vue';
+import IconUp from '@/components/partials/IconUp.vue';
+import IconDown from '@/components/partials/IconDown.vue';
 
 import type { Ref, ComputedRef } from 'vue';
 import type { ICommandToSave } from '@/interfaces/ISingleCommand';
 
 const sidebarOpen: ComputedRef<boolean> = computed(() => sidebarStore().sidebarOpen);
-const savedCommands: ComputedRef<ICommandToSave[]> = computed(() => sidebarStore().savedCommands);
+const hoveredCommandId: Ref<number | null> = ref(null);
+const savedCommandsList: Ref<ICommandToSave[]> = ref(sidebarStore().savedCommands.traverseNodes());
+const savedCommandsUpdatedFlag: ComputedRef<boolean> = computed(() => sidebarStore().savedCommandsUpdatedFlag);
 const target: Ref<null> = ref(null);
 
 function closeSidebar(): void {
@@ -75,6 +88,24 @@ function deleteSavedCommand(id: number): void {
     useToast()('Command removed', { type: TYPE.SUCCESS });
 };
 
+function moveCommandOneSpotUp(id: number): void {
+    /**
+     * Move selected command one spot up in the sidebar
+     * 
+     * @param {number} id - The ID of the command to move
+     */
+    sidebarStore().moveCommandOneSpotUp(id);
+};
+
+function moveCommandOneSpotDown(id: number): void {
+    /**
+     * Move selected command one spot down in the sidebar
+     * 
+     * @param {number} id - The ID of the command to move
+     */
+    sidebarStore().moveCommandOneSpotDown(id);
+};
+
 function clearSavedCommands(): void {
     /**
      * Clear all saved commands from the local store
@@ -87,7 +118,7 @@ async function CopyAllSavedCommands(): Promise<void> {
     /**
      * Copy all saved commands to the user's clipboard
      */
-    const allCommands: string = savedCommands.value.map(command => command.command).join('\n');
+    const allCommands: string = savedCommandsList.value.map(command => command.command).join('\n');
 
     if (allCommands === null) {
         useToast()('Unable to copy', { type: TYPE.ERROR });
@@ -121,12 +152,12 @@ async function copySavedCommandToClipboard(command: string): Promise<void> {
     };
 };
 
-onMounted(() => {
+function lowerSavedCommandUpdatedFlag(): void {
     /**
-     * Initiate the local saved command store on mount if it doesn't already exist
+     * Lower the saved commands updated flag
      */
-    sidebarStore().initiateLocalStore();
-});
+    sidebarStore().setCommandsUpdatedFlag(false);
+};
 
 onClickOutside(target, (): void => {
     /**
@@ -134,6 +165,16 @@ onClickOutside(target, (): void => {
      */
     closeSidebar();
 });
+
+watch(savedCommandsUpdatedFlag, () => {
+    /**
+     * Update the saved commands list when the saved commands are updated
+     */
+    if (savedCommandsUpdatedFlag.value) {
+        savedCommandsList.value = sidebarStore().savedCommands.traverseNodes();
+        lowerSavedCommandUpdatedFlag();
+    };
+})
 </script>
 
 <style scoped>
@@ -246,6 +287,15 @@ onClickOutside(target, (): void => {
 
 .command-meta-icon:hover {
     border: 1px solid var(--color-text);
+}
+
+.saved-command:first-of-type #command-meta-move-up,
+.saved-command:last-of-type #command-meta-move-down {
+    display: none;
+}
+
+.saved-command:last-of-type #command-meta-move-up {
+    margin-right: 24px;
 }
 
 #all-command-actions {
