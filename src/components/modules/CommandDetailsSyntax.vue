@@ -6,7 +6,7 @@
                 <IconReset />
             </span>
             <span id="command-meta-add" title="Add syntax to sidebar" class="command-meta-icon hover-hand"
-                v-on:click="addSyntaxToSidebar()">
+                v-on:click="saveCommandToSidebar()">
                 <IconAdd />
             </span>
             <span id="command-meta-copy" title="Copy syntax" class="command-meta-icon hover-hand"
@@ -63,6 +63,10 @@ const props = defineProps({
         type: String,
         required: true
     },
+    selectedCommandDescription: {
+        type: String,
+        required: true
+    },
     selectedCommandSelectedArgs: {
         type: Array as PropType<ISingleCommandArgs[]>,
         required: true
@@ -82,21 +86,37 @@ const newInputValue: Ref<string> = ref('');
 const target: Ref<null> = ref(null);
 const editField: Ref<HTMLInputElement[] | null> = ref(null);
 
-function addSyntaxToSidebar(): void {
-    /**
-     * Save the syntax to the sidebar
-     */
-    const children: HTMLCollection | undefined = document.querySelector('#command-syntax')?.children;
-    const contentToAdd: string | null = children ? Array.from(children, ({ textContent }): string | undefined => textContent?.trim()).join(' ') : null;
+class CommandToSave {
+    id: number;
+    name: string;
+    savedTime?: Date;
+    description: string;
+    command: string;
 
-    const commandToAdd: ICommandToSave = {
-        id: Date.now() + Math.random(),
-        name: props.selectedCommandName,
-        description: '',
-        command: contentToAdd ? contentToAdd : 'Error. Please try again.'
+    constructor(id: number, name: string, description: string, command: string) {
+        this.id = id;
+        this.name = name;
+        this.savedTime = new Date();
+        this.description = description;
+        this.command = command;
+    };
+};
+
+function saveCommandToSidebar(): void {
+    /**
+     * Save the current command to the sidebar
+     */
+    if (sidebarStore().savedCommands.length >= 20) {
+        useToast()('Maximum number of saved commands reached', { type: TYPE.ERROR });
+    } else {
+        const children: HTMLCollection | undefined = document.querySelector('#command-syntax')?.children;
+        const contentToAdd: string | null = children ? Array.from(children, ({ textContent }): string | undefined => textContent?.trim()).join(' ') : null;
+        const commandToSave: ICommandToSave = new CommandToSave(Date.now() + Math.random(), props.selectedCommandName, props.selectedCommandDescription, contentToAdd ? contentToAdd : 'Error. Please try again.');
+        sidebarStore().saveCommandToLocalStore(commandToSave);
+        useToast()('Command saved', { type: TYPE.SUCCESS });
     };
 
-    sidebarStore().saveCommandToSidebar(commandToAdd);
+    sidebarStore().setSidebarOpen();
 };
 
 async function copySyntaxToClipboard(): Promise<void> {

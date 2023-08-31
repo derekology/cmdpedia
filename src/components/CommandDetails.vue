@@ -14,6 +14,7 @@
             </div>
         </div>
         <CommandDetailsSyntax :selectedCommandName="selectedCommandName"
+            :selectedCommandDescription="selectedCommandDescription"
             :selectedCommandSelectedArgs="selectedCommandSelectedArgs"
             :selectedCommandSelectedOptions="selectedCommandSelectedOptions"
             :selectedCommandSelectedParams="selectedCommandSelectedParams"

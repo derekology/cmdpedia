@@ -1,17 +1,61 @@
 <template>
-    <div id="site-sidebar" :style="{ width: sidebarOpen ? '350px' : '0px' }" ref="target">
-        Hello world!
+    <div id="sidebar-container" :style="{ width: sidebarOpen ? '350px' : '0px' }" ref="target">
+        <div id="site-sidebar" :style="{ width: sidebarOpen ? '350px' : '0px' }" v-if="sidebarOpen">
+            <div id="sidebar-header">
+                <span id="header-info">
+                    <span id="title">
+                        Saved Commands
+                    </span>
+                </span>
+                <span id="sidebar-close" class="hover-hand" v-on:click="closeSidebar()">
+                    <IconClose />
+                </span>
+            </div>
+            <div id="saved-commands">
+                <div id="no-results" v-if="savedCommands.length == 0">
+                    <span>No commands saved.</span>
+                </div>
+                <div v-for="command in savedCommands" :key="command.id" class="saved-command" v-else>
+                    <span id="comment-meta-actions">
+                        <span id="command-meta-remove" title="Remove command" class="command-meta-icon hover-hand"
+                            v-on:click="deleteSavedCommand(command.id)">
+                            <IconClose />
+                        </span>
+                        <span id="command-meta-copy" title="Copy command" class="command-meta-icon hover-hand"
+                            v-on:click="copySavedCommandToClipboard(command.command)">
+                            <IconCopy />
+                        </span>
+                    </span>
+                    <div class="saved-command-command">{{ command.command }}</div>
+                </div>
+            </div>
+            <div id="all-command-actions">
+                <span id="copy-all-saved" v-on:click="CopyAllSavedCommands" v-if="savedCommands.length > 0"
+                    class="hover-hand">
+                    Copy all
+                </span>
+                <span id="remove-all-saved" v-on:click="clearSavedCommands" v-if="savedCommands.length > 0"
+                    class="hover-hand">
+                    Remove all
+                </span>
+            </div>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { sidebarStore } from '@/stores/sidebarStore';
 import { onClickOutside } from '@vueuse/core';
+import { useToast, TYPE } from "vue-toastification";
+import IconClose from './partials/IconClose.vue';
+import IconCopy from '@/components/partials/IconCopy.vue';
 
 import type { Ref, ComputedRef } from 'vue';
+import type { ICommandToSave } from '@/interfaces/ISingleCommand';
 
 const sidebarOpen: ComputedRef<boolean> = computed(() => sidebarStore().sidebarOpen);
+const savedCommands: ComputedRef<ICommandToSave[]> = computed(() => sidebarStore().savedCommands);
 const target: Ref<null> = ref(null);
 
 function closeSidebar(): void {
@@ -21,23 +65,206 @@ function closeSidebar(): void {
     sidebarStore().setSidebarClosed();
 };
 
+function deleteSavedCommand(id: number): void {
+    /**
+     * Delete a saved command from the local store
+     * 
+     * @param {number} id - The ID of the command to delete
+     */
+    sidebarStore().deleteSavedCommand(id);
+    useToast()('Command removed', { type: TYPE.SUCCESS });
+};
+
+function clearSavedCommands(): void {
+    /**
+     * Clear all saved commands from the local store
+     */
+    sidebarStore().clearSavedCommands();
+    useToast()('All commands removed', { type: TYPE.SUCCESS });
+};
+
+async function CopyAllSavedCommands(): Promise<void> {
+    /**
+     * Copy all saved commands to the user's clipboard
+     */
+    const allCommands: string = savedCommands.value.map(command => command.command).join('\n');
+
+    if (allCommands === null) {
+        useToast()('Unable to copy', { type: TYPE.ERROR });
+        return;
+    };
+
+    try {
+        await navigator.clipboard.writeText(allCommands);
+        useToast()('All commands copied', { type: TYPE.SUCCESS });
+    } catch (err) {
+        useToast()('Unable to copy', { type: TYPE.ERROR });
+    };
+};
+
+async function copySavedCommandToClipboard(command: string): Promise<void> {
+    /**
+     * Copy the command syntax to the user's clipboard
+     * 
+     * @param {string} command - The command to copy
+     */
+    if (command === null) {
+        useToast()('Unable to copy', { type: TYPE.ERROR });
+        return;
+    };
+
+    try {
+        await navigator.clipboard.writeText(command);
+        useToast()('Command copied', { type: TYPE.SUCCESS });
+    } catch (err) {
+        useToast()('Unable to copy', { type: TYPE.ERROR });
+    };
+};
+
+onMounted(() => {
+    /**
+     * Initiate the local saved command store on mount if it doesn't already exist
+     */
+    sidebarStore().initiateLocalStore();
+});
+
 onClickOutside(target, (): void => {
     /**
      * Close the sidebar when the user clicks outside of it
      */
-    closeSidebar()
+    closeSidebar();
 });
 </script>
 
 <style scoped>
-div#site-sidebar {
+#sidebar-container {
     position: fixed;
     top: 0;
     right: 0;
     width: 0px;
+    max-width: 100vw;
     height: 100vh;
     background-color: var(--color-background-mute);
-    z-index: 99999;
+    filter: drop-shadow(-10 0 0.2rem rgba(0, 0, 0, 0.1));
+    z-index: 9999;
     transition: all 0.2s;
+}
+
+#site-sidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    width: 0px;
+    max-width: 100vw;
+    height: 100%;
+    transition: all 0.2s;
+}
+
+#sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#sidebar-close {
+    margin-top: 6px;
+    margin-left: 2px;
+}
+
+#title {
+    margin-right: 0.5em;
+}
+
+#sidebar-close {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#sidebar-close:hover {
+    color: var(--color-hover);
+    transition: all 0.2s;
+}
+
+#saved-commands {
+    height: 100%;
+    margin-top: 0.75em;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+#saved-commands::-webkit-scrollbar {
+    display: none;
+}
+
+#no-results {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-style: italic;
+    padding: 20px 10px;
+    font-size: smaller;
+    height: 100%;
+}
+
+#saved-commands {
+    height: 100%;
+}
+
+.saved-command {
+    margin: 10px 0;
+    padding: 10px 15px;
+    background-color: var(--color-background);
+    border-radius: 15px;
+}
+
+.saved-command-command {
+    font-size: 0.75em;
+    line-height: 1em;
+}
+
+#comment-meta-actions>span {
+    margin-top: -4px;
+    margin-left: 3px;
+}
+
+.command-meta-icon {
+    float: right;
+    text-align: right;
+    width: 24px;
+    height: 24px;
+    border: 1px solid rgba(0, 0, 0, 0);
+    margin: -3px -1px;
+    border-radius: 3px;
+    scale: 0.85;
+    transition: border 0.2s;
+}
+
+.command-meta-icon:hover {
+    border: 1px solid var(--color-text);
+}
+
+#all-command-actions {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    margin-top: 0.75em;
+}
+
+#all-command-actions>span {
+    line-height: 1em;
+    margin: 0.5em 0;
+    border: 1px solid var(--color-border-hover-90);
+    padding: 0.5em 1em;
+    border-radius: 5px;
+    transition: all 0.2s;
+}
+
+#all-command-actions>span:hover {
+    background-color: var(--color-border-hover-90);
 }
 </style>
