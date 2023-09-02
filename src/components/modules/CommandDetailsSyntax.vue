@@ -1,15 +1,15 @@
 <template>
     <div id="command-meta">
         <span id="comment-meta-actions">
-            <span id="command-meta-reset" title="Reset syntax" class="command-meta-icon hover-hand"
+            <span id="command-meta-reset" title="Reset command" class="command-meta-icon hover-hand"
                 v-on:click="resetSelectedInputs()">
                 <IconReset />
             </span>
-            <span id="command-meta-add" title="Add syntax to sidebar" class="command-meta-icon hover-hand"
+            <span id="command-meta-add" title="Add command to sidebar" class="command-meta-icon hover-hand"
                 v-on:click="saveCommandToSidebar()">
                 <IconAdd />
             </span>
-            <span id="command-meta-copy" title="Copy syntax" class="command-meta-icon hover-hand"
+            <span id="command-meta-copy" title="Copy command" class="command-meta-icon hover-hand"
                 v-on:click="copySyntaxToClipboard()">
                 <IconCopy />
             </span>
@@ -143,7 +143,7 @@ function resetSelectedInputs(): void {
     /**
      * Reset the selected inputs
      */
-    useToast()('Syntax reset', { type: TYPE.SUCCESS });
+    useToast()('Command reset', { type: TYPE.SUCCESS });
     emitResetSelectedInputs();
 };
 
