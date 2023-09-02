@@ -18,19 +18,19 @@
                 <div v-for="command in savedCommandsList" :key="command.id" class="saved-command"
                     v-on:mouseenter="hoveredCommandId = command.id" v-on:mouseleave="hoveredCommandId = null" v-else>
                     <span id="comment-meta-actions" v-if="command.id == hoveredCommandId">
-                        <span id="command-meta-remove" title="Remove command" class="command-meta-icon hover-hand"
+                        <span id="command-meta-remove" title="Remove" class="command-meta-icon hover-hand"
                             v-on:click="deleteSavedCommand(command.id)">
                             <IconClose />
                         </span>
-                        <span id="command-meta-copy" title="Copy command" class="command-meta-icon hover-hand"
+                        <span id="command-meta-copy" title="Copy" class="command-meta-icon hover-hand"
                             v-on:click="copySavedCommandToClipboard(command.command)">
                             <IconCopy />
                         </span>
-                        <span id="command-meta-move-down" title="Move command down" class="command-meta-icon hover-hand"
+                        <span id="command-meta-move-down" title="Move down" class="command-meta-icon hover-hand"
                             v-on:click="moveCommandOneSpotDown(command.id)">
                             <IconDown />
                         </span>
-                        <span id="command-meta-move-up" title="Move command up" class="command-meta-icon hover-hand"
+                        <span id="command-meta-move-up" title="Move up" class="command-meta-icon hover-hand"
                             v-on:click="moveCommandOneSpotUp(command.id)">
                             <IconUp />
                         </span>
@@ -195,7 +195,7 @@ watch(savedCommandsUpdatedFlag, () => {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 20px;
+    padding: 15px;
     width: 0px;
     max-width: 100vw;
     height: 100%;
@@ -206,6 +206,7 @@ watch(savedCommandsUpdatedFlag, () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-left: 5px;
 }
 
 #sidebar-close {
@@ -257,15 +258,25 @@ watch(savedCommandsUpdatedFlag, () => {
 }
 
 .saved-command {
-    margin: 10px 0;
+    position: relative;
+    margin: 10px 5px;
     padding: 10px 15px;
+    border-radius: 10px;
     background-color: var(--color-background);
-    border-radius: 15px;
+    border: 1px solid var(--color-background-mute);
+    filter: drop-shadow(0 0 0.15rem rgba(0, 0, 0, 0.025));
 }
 
 .saved-command-command {
     font-size: 0.75em;
     line-height: 1em;
+}
+
+#comment-meta-actions {
+    position: absolute;
+    right: 7px;
+    padding: 0 3px 5px 3px;
+    background: var(--color-background);
 }
 
 #comment-meta-actions>span {
@@ -302,19 +313,19 @@ watch(savedCommandsUpdatedFlag, () => {
     display: flex;
     justify-content: space-around;
     text-align: center;
-    margin-top: 0.75em;
+    margin: 0.75em 5px 0 5px;
 }
 
 #all-command-actions>span {
     line-height: 1em;
     margin: 0.5em 0;
-    border: 1px solid var(--color-border-hover-90);
+    border: 1px solid var(--color-border);
     padding: 0.5em 1em;
     border-radius: 5px;
     transition: all 0.2s;
 }
 
 #all-command-actions>span:hover {
-    background-color: var(--color-border-hover-90);
+    background-color: var(--color-border-hover);
 }
 </style>
