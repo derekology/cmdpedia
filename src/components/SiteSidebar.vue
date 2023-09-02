@@ -1,53 +1,51 @@
 <template>
-    <div id="sidebar-container" :style="{ width: sidebarOpen ? '350px' : '0px' }" ref="target">
-        <div id="site-sidebar" :style="{ width: sidebarOpen ? '350px' : '0px' }" v-if="sidebarOpen">
-            <div id="sidebar-header">
-                <span id="header-info">
-                    <span id="title">
-                        Saved Commands
+    <div id="site-sidebar" v-if="sidebarOpen" ref="target">
+        <div id="sidebar-header">
+            <span id="header-info">
+                <span id="title">
+                    Saved Commands
+                </span>
+            </span>
+            <span id="sidebar-close" class="hover-hand" v-on:click="closeSidebar()">
+                <IconClose />
+            </span>
+        </div>
+        <div id="saved-commands">
+            <div id="no-results" v-if="savedCommandsList.length == 0">
+                <span>No commands saved.</span>
+            </div>
+            <div v-for="command in savedCommandsList" :key="command.id" class="saved-command"
+                v-on:mouseenter="hoveredCommandId = command.id" v-on:mouseleave="hoveredCommandId = null" v-else>
+                <span id="comment-meta-actions" v-if="command.id == hoveredCommandId">
+                    <span id="command-meta-remove" title="Remove" class="command-meta-icon hover-hand"
+                        v-on:click="deleteSavedCommand(command.id)">
+                        <IconClose />
+                    </span>
+                    <span id="command-meta-copy" title="Copy" class="command-meta-icon hover-hand"
+                        v-on:click="copySavedCommandToClipboard(command.command)">
+                        <IconCopy />
+                    </span>
+                    <span id="command-meta-move-down" title="Move down" class="command-meta-icon hover-hand"
+                        v-on:click="moveCommandOneSpotDown(command.id)">
+                        <IconDown />
+                    </span>
+                    <span id="command-meta-move-up" title="Move up" class="command-meta-icon hover-hand"
+                        v-on:click="moveCommandOneSpotUp(command.id)">
+                        <IconUp />
                     </span>
                 </span>
-                <span id="sidebar-close" class="hover-hand" v-on:click="closeSidebar()">
-                    <IconClose />
-                </span>
+                <div class="saved-command-command">{{ command.command }}</div>
             </div>
-            <div id="saved-commands">
-                <div id="no-results" v-if="savedCommandsList.length == 0">
-                    <span>No commands saved.</span>
-                </div>
-                <div v-for="command in savedCommandsList" :key="command.id" class="saved-command"
-                    v-on:mouseenter="hoveredCommandId = command.id" v-on:mouseleave="hoveredCommandId = null" v-else>
-                    <span id="comment-meta-actions" v-if="command.id == hoveredCommandId">
-                        <span id="command-meta-remove" title="Remove" class="command-meta-icon hover-hand"
-                            v-on:click="deleteSavedCommand(command.id)">
-                            <IconClose />
-                        </span>
-                        <span id="command-meta-copy" title="Copy" class="command-meta-icon hover-hand"
-                            v-on:click="copySavedCommandToClipboard(command.command)">
-                            <IconCopy />
-                        </span>
-                        <span id="command-meta-move-down" title="Move down" class="command-meta-icon hover-hand"
-                            v-on:click="moveCommandOneSpotDown(command.id)">
-                            <IconDown />
-                        </span>
-                        <span id="command-meta-move-up" title="Move up" class="command-meta-icon hover-hand"
-                            v-on:click="moveCommandOneSpotUp(command.id)">
-                            <IconUp />
-                        </span>
-                    </span>
-                    <div class="saved-command-command">{{ command.command }}</div>
-                </div>
-            </div>
-            <div id="all-command-actions">
-                <span id="copy-all-saved" v-on:click="CopyAllSavedCommands" v-if="savedCommandsList.length > 0"
-                    class="hover-hand">
-                    Copy all
-                </span>
-                <span id="remove-all-saved" v-on:click="clearSavedCommands" v-if="savedCommandsList.length > 0"
-                    class="hover-hand">
-                    Remove all
-                </span>
-            </div>
+        </div>
+        <div id="all-command-actions">
+            <span id="copy-all-saved" v-on:click="CopyAllSavedCommands" v-if="savedCommandsList.length > 0"
+                class="hover-hand">
+                Copy all
+            </span>
+            <span id="remove-all-saved" v-on:click="clearSavedCommands" v-if="savedCommandsList.length > 0"
+                class="hover-hand">
+                Remove all
+            </span>
         </div>
     </div>
 </template>
@@ -174,31 +172,24 @@ watch(savedCommandsUpdatedFlag, () => {
         savedCommandsList.value = sidebarStore().savedCommands.traverseNodes();
         lowerSavedCommandUpdatedFlag();
     };
-})
+});
 </script>
 
 <style scoped>
-#sidebar-container {
+#site-sidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     position: fixed;
     top: 0;
     right: 0;
-    width: 0px;
+    padding: 15px;
+    width: 350px;
     max-width: 100vw;
     height: 100vh;
     background-color: var(--color-background-mute);
     filter: drop-shadow(-10 0 0.2rem rgba(0, 0, 0, 0.1));
     z-index: 9999;
-    transition: all 0.2s;
-}
-
-#site-sidebar {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 15px;
-    width: 0px;
-    max-width: 100vw;
-    height: 100%;
     transition: all 0.2s;
 }
 

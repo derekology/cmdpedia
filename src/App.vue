@@ -1,6 +1,8 @@
 <template>
   <SiteHeader />
-  <SiteSidebar />
+  <Transition>
+    <SiteSidebar />
+  </Transition>
   <RouterView />
 </template>
 
@@ -11,3 +13,15 @@ import { colourSchemeStore } from './stores/colourSchemeStore';
 
 colourSchemeStore().determineInitialColourScheme();
 </script>
+
+<style scoped>
+.v-enter-active,
+.v-leave-active {
+  transition: all 0.2s ease-in-out;
+}
+
+.v-enter-from,
+.v-leave-to {
+  transform: translateX(350px);
+}
+</style>
