@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --vt-c-white: #ffffff;
+  --vt-c-white-soft: #fafafa;
+  --vt-c-white-mute: #eaeaea;
+
+  --vt-c-black: #000000;
+  --vt-c-black-soft: #222222;
+  --vt-c-black-mute: #282828;
+
+  --vt-c-trim: #dd3333;
+
+  --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
+  --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
+  --vt-c-divider-light-3: rgba(160, 160, 160, 0.95);
+  --vt-c-divider-dark-1: rgba(84, 84, 84, 0.45);
+  --vt-c-divider-dark-2: rgba(84, 84, 84, 0.28);
+  --vt-c-divider-dark-3: rgba(60, 60, 60, 0.95);
+
+  --vt-c-text-light-1: var(--vt-c-black-soft);
+  --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
+  --vt-c-text-light-3: rgba(60, 60, 60, 0.95);
+  --vt-c-text-dark-1: var(--vt-c-white);
+  --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
+  --vt-c-text-dark-3: rgba(235, 235, 235, 0.93);
+
+  --vt-c-error-light: #d84141;
+  --vt-c-error-dark: #8b1515;
+}
+
+/* semantic color variables for this project */
+:root {
+  --color-background: var(--vt-c-white);
+  --color-background-soft: var(--vt-c-white-soft);
+  --color-background-mute: var(--vt-c-white-mute);
+
+  --color-border: var(--vt-c-divider-light-2);
+  --color-border-hover: var(--vt-c-divider-light-1);
+  --color-border-hover-90: var(--vt-c-divider-light-3);
+
+  --color-heading: var(--vt-c-text-light-1);
+  --color-text: var(--vt-c-text-light-1);
+  --color-hover: var(--vt-c-text-light-2);
+
+  --color-error: var(--vt-c-error-light);
+
+  --section-gap: 160px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: var(--vt-c-black);
+    --color-background-soft: var(--vt-c-black-soft);
+    --color-background-mute: var(--vt-c-black-mute);
+
+    --color-border: var(--vt-c-divider-dark-2);
+    --color-border-hover: var(--vt-c-divider-dark-1);
+    --color-border-hover-90: var(--vt-c-divider-dark-3);
+
+    --color-heading: var(--vt-c-text-dark-1);
+    --color-text: var(--vt-c-text-dark-2);
+    --color-hover: var(--vt-c-text-dark-3);
+
+    --color-error: var(--vt-c-error-dark);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+}
+
+body {
+  color: var(--color-text);
+  background: var(--color-background-soft);
+  transition: background-color 0.5s;
+  line-height: 2.25rem;
+  font-family: 'Inconsolata', 'Consolas', 'Courier New', monospace;
+  font-size: 20px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

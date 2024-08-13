@@ -1,0 +1,80 @@
+@import '@/assets/base.css';
+
+#app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-weight: normal;
+}
+
+main {
+  width: 100%;
+}
+
+a {
+  color: var(--color-text);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.hover-hand:hover {
+  cursor: pointer;
+}
+
+input:focus, input:active {
+  outline: none;
+}
+
+.toast {
+  text-align: center !important;
+  color: var(--color-text) !important;
+  min-width: auto !important;
+  max-width: 400px !important;
+  min-height: auto !important;
+  max-height: 300px !important;
+  padding: 0.75em !important;
+  z-index: 99999 !important;
+}
+
+.Vue-Toastification__toast--error {
+  background-color: var(--color-error) !important;
+}
+
+.Vue-Toastification__toast--success {
+  background-color: var(--color-background-mute) !important;
+}
+
+.Vue-Toastification__toast-body {
+  font-family: 'Inconsolata', 'Consolas', 'Courier New', monospace !important;
+  font-size: 14px !important;
+  line-height: 1em !important;
+}
+
+@media only screen and (max-width: 600px) {
+  .Vue-Toastification__container .Vue-Toastification__toast {
+      margin-right: auto;
+      margin-left: auto;
+  }
+}
+
+*.enable-select {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+*:not(.enable-select) {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+a:hover {
+  color: var(--color-hover);
+}
