@@ -1,12 +1,12 @@
 # > cmdpedia
 
-cmdpedia is a work-in-progress that aims to make documenting command line applications easier.
+cmdpedia_generator is a work-in-progress that aims to make documenting command line applications easier.
 
 Given a Python (Click-only for now) module, it'll parse its docstring and commands to generate a single HTML file that displays this information in a searchable, interactive way.
 
 ## Features
 
-- Standalone, sharable HTML file
+- Generates a standalone, sharable HTML file
 - Search for commands by name or keyword
 - View available inputs for a selected command
 - Add inputs to customize the command's syntax
