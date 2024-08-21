@@ -7,9 +7,11 @@ with open(README_PATH, "r", encoding="utf-8") as fh:
 
 setup(
     name='cmdpedia_generator',
-    version='0.0.1-alpha',
+    version='0.0.1-alpha1',
     packages=find_packages(),
-    install_requires=[],
+    install_requires=[
+        "click",
+    ],
     entry_points={
         'console_scripts': [
             'cmdpedia_generator = cmdpedia_generator.__main__:main',
@@ -26,5 +28,5 @@ setup(
         'Programming Language :: Python :: 3',
         'Operating System :: OS Independent',
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.6'
 )
