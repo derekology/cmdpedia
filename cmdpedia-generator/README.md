@@ -17,7 +17,7 @@ Given a Python (Click-only for now) module, it'll parse its docstring and comman
 
 [View the cmdpedia for this project's main module.](https://derekology.github.io/cmdpedia/)
 
-Additional examples are located in the [docs/example_modules](https://github.com/derekology/cmdpedia/tree/main/docs/example_modules) folder.
+Additional examples are located in the [docs/example_modules](https://github.com/derekology/cmdpedia/tree/main/docs/example_modules/) folder.
 
 ## Usage
 
