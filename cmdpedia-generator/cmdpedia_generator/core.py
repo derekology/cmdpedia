@@ -1,5 +1,8 @@
 """Core module for the cmdpedia_generator package."""
 
+from typing import Optional
+
+import ast
 import json
 import os
 import platform
@@ -55,24 +58,50 @@ def replace_placeholder_in_html(template_path, output_path, placeholder, replace
     with open(output_path, 'w', encoding='utf-8') as file:
         file.write(updated_content)
 
-def generate(module_name: str, program_type: ProgramTypeEnum) -> None:
+def generate(program_type: ProgramTypeEnum, file_path: str) -> None:
     """
     Generate command documentation for a Click CLI module.
     
-    :param module_name: The name of the module to generate documentation for.
     :param program_type: The type of program to generate documentation for.
+    :param file_path: The file path to the .py module to generate documentation for.
     """
+    if not file_path.endswith(".py"):
+        raise ValueError(f"Invalid file type: {file_path}. Expected a .py file.")
+    
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"File not found: {file_path}")
+    
+    try:
+        with open(file_path, "r", encoding="utf-8") as file:
+            source_code = file.read()
+    except Exception as e:
+        raise IOError(f"Error reading file {file_path}: {str(e)}")
+    
+    try:
+        parsed_ast = ast.parse(source_code)
+    except SyntaxError as e:
+        raise SyntaxError(f"Syntax error in file {file_path}: {str(e)}")
+    
     extractor: callable = get_program_extractor(program_type)
-    module = __import__(module_name)
+    try:
+        docstring, entry_funcs, commands = extractor(parsed_ast)
+    except Exception as e:
+        raise RuntimeError(f"Error extracting commands from {file_path}: {str(e)}")
+
     operating_system: str = platform.system()
     python_command: str = "python" if operating_system == "Windows" else "python3"
-    docstring, entry_funcs, commands = extractor(module)
+    docstring, entry_funcs, commands = extractor(parsed_ast)
     command_list: list = [command for command in commands]
-    filename = os.path.basename(module.__file__)
+    filename = os.path.basename(file_path)
     result: dict = {
         "docstring": docstring,
         "runCommand": f"{python_command} {filename}",
         "entryFuncs": entry_funcs,
         "commands": command_list
     }
-    replace_placeholder_in_html(HTML_TEMPLATE_PATH, f"{filename}-cmdpedia.html", PLACEHOLDER_STRING, result)
+    
+    output_path = os.path.join(current_directory, f"{filename}-cmdpedia.html")
+    try:
+        replace_placeholder_in_html(HTML_TEMPLATE_PATH, output_path, PLACEHOLDER_STRING, result)
+    except Exception as e:
+        raise IOError(f"Error writing output file {output_path}: {str(e)}")

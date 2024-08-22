@@ -70,7 +70,7 @@ def generate_cmdpedia(program_type):
 
     :param program_type: The type of program to generate documentation for. Must be one of: 'click'.
     """
-    cmdpedia_generator.generate(__name__, program_type)
+    cmdpedia_generator.generate(program_type, __file__)
 
 
 if __name__ == "__main__":

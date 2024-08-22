@@ -7,7 +7,7 @@ with open(README_PATH, "r", encoding="utf-8") as fh:
 
 setup(
     name='cmdpedia_generator',
-    version='0.0.1-alpha1',
+    version='0.0.1-alpha2',
     packages=find_packages(),
     install_requires=[
         "click",

@@ -14,15 +14,15 @@ import click
 from cmdpedia_generator.core import generate
 
 @click.command()
-@click.argument('module_name')
 @click.argument('program_type')
-def main(module_name, program_type) -> None:
+@click.argument('file_path')
+def main(program_type, file_path) -> None:
     """Main entry point for the command line interface.
     
-    :param module_name: The name of the module to generate documentation for.
+    :param file_path: The file path to the .py module to generate documentation for.
     :param program_type: The type of program to generate documentation for. Must be one of: 'click'.
     """
-    generate(module_name, program_type)
+    generate(program_type, file_path)
 
 if __name__ == "__main__":
     main()

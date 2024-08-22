@@ -1,6 +1,5 @@
 
 import ast
-import inspect
 
 
 class ClickGroupVisitor(ast.NodeVisitor):
@@ -200,34 +199,25 @@ class ClickCommandVisitor(ast.NodeVisitor):
         self.generic_visit(node)
 
 
-def extract_click_commands(module) -> tuple:
+def extract_click_commands(parsed_ast) -> tuple:
     """
-    Extract Click commands from a module.
+    Extract Click commands from a abstract syntax tree.
     
-    :param module: The module to extract commands from.
+    :param parsed_ast: abstract syntax tree parsed from the source code of the module.
     :return: A tuple containing the docstring, entry point functions, and a list of commands.
     """
-    source = inspect.getsource(module)
-
-    tree = ast.parse(source)
-
-    docstring = ast.get_docstring(tree) if ast.get_docstring(tree) else ""
-
-    ## Don't need a list of groups anymore
-    # click_group_visitor: ClickGroupVisitor = ClickGroupVisitor()
-    # click_group_visitor.visit(tree)
-    # groups: list = click_group_visitor.get_groups()
+    docstring = ast.get_docstring(parsed_ast) or ""
 
     click_entry_visitor: ClickEntryVisitor = ClickEntryVisitor()
-    click_entry_visitor.visit(tree)
+    click_entry_visitor.visit(parsed_ast)
     entry_funcs: str = click_entry_visitor.get_entry_funcs()
 
     click_group_hierarchy_visitor: ClickGroupHierarchyVisitor = ClickGroupHierarchyVisitor(entry_funcs=entry_funcs)
-    click_group_hierarchy_visitor.visit(tree)
+    click_group_hierarchy_visitor.visit(parsed_ast)
     hierarchy: dict = click_group_hierarchy_visitor.get_hierarchy()
 
     click_command_visitor: ClickCommandVisitor = ClickCommandVisitor(hierarchy=hierarchy)
-    click_command_visitor.visit(tree)
+    click_command_visitor.visit(parsed_ast)
     commands: dict = click_command_visitor.commands
 
     return docstring, entry_funcs, commands
